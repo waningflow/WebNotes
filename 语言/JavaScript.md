@@ -1,8 +1,8 @@
 ### 箭头函数
-起源：
+起源
  > 更简短的函数;不绑定this
 
-描述：
+描述
  - 更短的函数
    - 不解释
  - 不绑定this
@@ -12,18 +12,21 @@
    - 不能用作构造器，和 new一起用会抛出错误
    - 没有prototype属性
 
-用例:
+用例
 ```
 ```
 
-疑问：
+疑问
  > 鉴于 this 是词法层面上的，严格模式中与 this 相关的规则都将被忽略
 
 ### 关于 this
-起源：
+起源
  > 因为函数可以在不同的运行环境执行，所以需要"this"在函数体内部，指代函数当前的运行环境
 
-```
+描述
+
+用例
+```js
 const a = {
   a: 'a'
 };
@@ -45,7 +48,36 @@ const answers = [
   obj.getThis4(),
   obj.getThis4.call(a)
 ];
+
+// undefined,undefined,obj,a,undefined,undefined,obj,obj
 ```
+```js
+const a = {
+  a: 'a'
+};
+class Obj {
+  getThis = () => this
+  getThis2 () {
+    return this;
+  }
+}
+const obj2 = new Obj();
+obj2.getThis3 = obj2.getThis.bind(obj2);
+obj2.getThis4 = obj2.getThis2.bind(obj2);
+const answers2 = [
+  obj2.getThis(),
+  obj2.getThis.call(a),
+  obj2.getThis2(),
+  obj2.getThis2.call(a),
+  obj2.getThis3(),
+  obj2.getThis3.call(a),
+  obj2.getThis4(),
+  obj2.getThis4.call(a)
+];
+
+// obj2,obj2,obj2,a,obj2,obj2,obj2,obj2
+```
+
 
 
 
