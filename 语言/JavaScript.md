@@ -103,11 +103,11 @@ const answers2 = [
 要点
  - C.prototype用于建立由new C()创建的对象的原型
  - Object.getPrototypeOf(obj)是获取obj对象的原型对象的标准方法
- - obj.__proto__是获取obj对象的原型对象的非标准方法
- - 使用Object.getPrototypeOf()而不要使用__proto__属性
+ - obj.\_\_proto\_\_是获取obj对象的原型对象的非标准方法
+ - 使用Object.getPrototypeOf()而不要使用\_\_proto\_\_属性
     - 后者在某些情况下表现不可预测，而前者都是有效的，比如对于拥有null原型的对象
     - 后者会污染所有的对象，导致大量bug
- - 始终不要修改__proto__
+ - 始终不要修改\_\_proto\_\_
     - 可移植性问题，不是所有平台都支持修改对象原型 
     - 性能问题，导致浏览器基于对象结构的优化失效
     - 行为无法预测
