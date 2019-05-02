@@ -114,9 +114,12 @@ const answers2 = [
  - 使用Object.create给新对象设置原型
 
  示例
+ 
  通过构造函数的原型实现继承
+
  ```js
- function Person () {}
+
+function Person () {}
 Person.prototype.walk = function () {
   return 'walking ...';
 }
@@ -139,6 +142,7 @@ dev.code(); // 'coding ...'
 dev.work(); // 'working ...'
 dev.walk(); // 'walking ...'
  ```
+ 
  直接连接各个对象也可以实现继承，但是只有一个实例
  ```js
  var person = {
