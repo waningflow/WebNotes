@@ -96,6 +96,144 @@ const answers2 = [
 
 ### 严格模式
 
-### prototype
+### 原型
+简述
+> 继承机制的基础
+
+要点
+ - C.prototype用于建立由new C()创建的对象的原型
+ - Object.getPrototypeOf(obj)是获取obj对象的原型对象的标准方法
+ - obj.__proto__是获取obj对象的原型对象的非标准方法
+ - 使用Object.getPrototypeOf()而不要使用__proto__属性
+    - 后者在某些情况下表现不可预测，而前者都是有效的，比如对于拥有null原型的对象
+    - 后者会污染所有的对象，导致大量bug
+ - 始终不要修改__proto__
+    - 可移植性问题，不是所有平台都支持修改对象原型 
+    - 性能问题，导致浏览器基于对象结构的优化失效
+    - 行为无法预测
+ - 使用Object.create给新对象设置原型
+
+ 示例
+ 通过构造函数的原型实现继承
+ ```js
+ function Person () {}
+Person.prototype.walk = function () {
+  return 'walking ...';
+}
+
+function Worker() {}
+Worker.prototype = Object.create(Person.prototype);
+
+Worker.prototype.work = function () {
+  return 'working ....';
+}
+
+function Developer () {}
+Developer.prototype = Object.create(Worker.prototype);
+Developer.prototype.code = function () {
+  return 'coding ....';
+}
+
+var dev = new Developer();
+dev.code(); // 'coding ...'
+dev.work(); // 'working ...'
+dev.walk(); // 'walking ...'
+ ```
+ 直接连接各个对象也可以实现继承，但是只有一个实例
+ ```js
+ var person = {
+  walk() { return 'walking...';}
+};
+
+var worker = Object.create(person);
+worker.work = function () {
+  return 'working';
+}
+
+var dev = Object.create(worker);
+dev.code = function () {
+  return 'coding...';
+}
+dev.code(); // 'coding ...'
+dev.work(); // 'working ...'
+dev.walk(); // 'walking ...'
+ ```
+ 使用function mixin
+ ```js
+ /* Define Person's functionalities */
+function personFns() {
+  this.walk = function () {
+    return 'Walking ...';
+  };
+  this.getName = function () {
+    return this.name;
+  };
+}
+
+/* Define Worker's functionalities */
+function workerFns() {
+  this.work = function () {
+    return 'Working ...';
+  };
+}
+
+/* Define Developer's functionalities */
+function developerFns() {
+  this.code = function () {
+    return 'Coding ...';
+  };
+}
+
+/* Define the Developer type */
+function Developer(name) {
+  if (!(this instanceof Developer)) {
+    return new Developer(name);
+  }
+  this.name = name;
+  this.toString = function () {
+    return this.name;
+  };
+}
+
+/* apply each functionalities to
+Developer's prototype */
+[personFns, workerFns, developerFns].forEach(fn => {
+  fn.call(Developer.prototype);
+});
+
+/* create an instance and call methods */
+const dev = Developer('AJ');
+console.log(dev.getName());  //AJ
+console.log(dev.walk());     //Walking ...
+console.log(dev.work());     //Working ...
+console.log(dev.code());     //Coding ...
+console.log('Dev is: ' + dev);  //Dev is: AJ
+ ```
+ class本质
+ ```js
+ class Car {
+  constructor(name) {
+    this.name = name;
+  }
+  move() {
+    return 'moving...';
+  }
+}
+
+const toyota = new Car('Toyota');
+toyota.move();
+
+// 等同于下面的代码
+
+function Car(name) {
+  this.name = name;
+}
+Car.prototype.move = function move() {
+  return 'moving...';
+};
+
+const toyota = new Car('Toyota');
+toyota.move();
+ ```
 
 ### Object.defineProperty()
