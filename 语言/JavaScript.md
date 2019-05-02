@@ -113,11 +113,11 @@ const answers2 = [
     - 行为无法预测
  - 使用Object.create给新对象设置原型
 
- 示例
- 
+示例
+
  通过构造函数的原型实现继承
 
- ```js
+```js
 
 function Person () {}
 Person.prototype.walk = function () {
@@ -141,10 +141,10 @@ var dev = new Developer();
 dev.code(); // 'coding ...'
 dev.work(); // 'working ...'
 dev.walk(); // 'walking ...'
- ```
+```
  
  直接连接各个对象也可以实现继承，但是只有一个实例
- ```js
+```js
  var person = {
   walk() { return 'walking...';}
 };
@@ -161,9 +161,9 @@ dev.code = function () {
 dev.code(); // 'coding ...'
 dev.work(); // 'working ...'
 dev.walk(); // 'walking ...'
- ```
+```
  使用function mixin
- ```js
+```js
  /* Define Person's functionalities */
 function personFns() {
   this.walk = function () {
@@ -212,9 +212,9 @@ console.log(dev.walk());     //Walking ...
 console.log(dev.work());     //Working ...
 console.log(dev.code());     //Coding ...
 console.log('Dev is: ' + dev);  //Dev is: AJ
- ```
+```
  class本质
- ```js
+```js
  class Car {
   constructor(name) {
     this.name = name;
@@ -238,6 +238,6 @@ Car.prototype.move = function move() {
 
 const toyota = new Car('Toyota');
 toyota.move();
- ```
+```
 
 ### Object.defineProperty()
