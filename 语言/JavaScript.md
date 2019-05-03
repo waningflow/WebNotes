@@ -27,6 +27,41 @@
 - 访问作用域内不存在的变量会报`ReferenceError`, 给未声明的变量赋值在非严格模式下会在全局作用域创建一个变量，而在严格模式下会报错
 - let 声明的变量在一个 block(`{}`)内有效，在 block 内 let 声明之前称为`TDZ`(暂时性死区)，此时访问变量会报`ReferenceError`
 
+### 立即调用表达式
+
+简述
+
+> 简称 IIFE，创建局部作用域，主要是为了防止内部变量对外部环境造成影响
+
+### 闭包
+
+简述
+
+> 函数执行结束后仍然可以获取函数内部作用域变量的方式
+
+### Polyfilling
+
+简述
+
+> 在旧环境中兼容新特性的方式, 现有实现如[ES6-Shim](https://github.com/es-shims/es6-shim)
+
+示例
+兼容不支持 ES6 的浏览器实现的`Number.isNaN(..)`
+
+```js
+if (!Number.isNaN) {
+  Number.isNaN = function isNaN(x) {
+    return x !== x
+  }
+}
+```
+
+### Transpiling
+
+简述
+
+> 转译，将新的语法转换为等效的旧代码以兼容旧的 JS 引擎, 常见转译器如[Babel](https://babeljs.io)
+
 ### 箭头函数
 
 简述
