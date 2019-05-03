@@ -1,3 +1,13 @@
+引用YDKJS一段话
+> JavaScript is awesome. It's easy to learn partially, and much harder to learn completely (or even sufficiently).
+
+### 类型
+要点
+- `string`,`number`,`boolean`,`null`,`undefined`,`object`,`symbol`(ES6新增)
+- `typeof null === "object"`,历史遗留bug
+- `typeof [] === "object"`,数组是特殊的对象 ,`typeof function(){} === "function"`，函数是对象的子类型
+- 对于直接执行在`string`上的方法，js实际是创建了一个对应的`String`对象,并执行`String.prototype`上的方法，如`"hello".toUpperCase()`。`number`和`boolean`同理
+
 ### 箭头函数
 简述
  > 更简短的函数;不绑定this
