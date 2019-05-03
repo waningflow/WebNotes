@@ -13,7 +13,7 @@
 - 强制转换，显性`Number("42")`，隐性`"42" * 1`
 - Truthy & Falsy,一个非`boolean`转变为`boolean`会变成`true/false`
   - Falsy: `""`,`0`,`-0`,`NaN`,`null`,`undefined`,`false`
-  - Trythy: 除了 Falsy 的其他都是
+  - Truthy: 除了 Falsy 的其他都是
 - 相等和不等
   - `==`,允许强制转换
   - `===`,不允许强制转换
@@ -24,8 +24,27 @@
 要点
 
 - var 声明的变量在作用域内自动提升
-- 访问作用域内不存在的变量会报`ReferenceError`, 给未声明的变量赋值在非严格模式下会在全局作用域创建一个变量，而在严格模式下会报错
+- 访问作用域内不存在的变量会报`ReferenceError`, 给未声明的变量赋值在非严格模式下会在全局作用域创建一个变量，而在严格模式下会报`ReferenceError`
 - let 声明的变量在一个 block(`{}`)内有效，在 block 内 let 声明之前称为`TDZ`(暂时性死区)，此时访问变量会报`ReferenceError`
+
+### 编译原理
+
+要点
+
+- 简单说分为三个主要环节，实际会复杂很多
+  - Tokenizing/Lexing, 分词,词法分析
+  - Parsing，转换成“AST”(Abstract Syntax Tree)
+  - Code-Generation，生成可执行代码
+- 术语
+  - LHS（Left-hand Side），赋值的目标, 如果LHS look-up直到最顶层作用域也没有找到一个变量，在非严格模式，会创建一个变量，而在严格模式会抛出`ReferenceError`错误
+  - RHS（Right-hand Side），赋值的源，如果RHS look-up在所有嵌套作用域中没有找到一个变量，则会抛出`ReferenceError`错误。如果对找到的变量做错误的操作，比如试图像函数一样执行一个`非函数`,则会抛出`TypeError`
+
+
+### 作用域
+
+简述
+
+> 存取变量的规则
 
 ### 立即调用表达式
 
@@ -46,6 +65,7 @@
 > 在旧环境中兼容新特性的方式, 现有实现如[ES6-Shim](https://github.com/es-shims/es6-shim)
 
 示例
+
 兼容不支持 ES6 的浏览器实现的`Number.isNaN(..)`
 
 ```js
