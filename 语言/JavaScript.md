@@ -38,7 +38,7 @@
 - 术语
   - LHS（Left-hand Side），赋值的目标, 如果 LHS look-up 直到最顶层作用域也没有找到一个变量，在非严格模式，会创建一个变量，而在严格模式会抛出`ReferenceError`错误
   - RHS（Right-hand Side），赋值的源，如果 RHS look-up 在所有嵌套作用域中没有找到一个变量，则会抛出`ReferenceError`错误。如果对找到的变量做错误的操作，比如试图像函数一样执行一个`非函数`,则会抛出`TypeError`
-- 对于一个表达式`var a = 2`, JS引擎看到的是两个表达式`var a`和`a = 2`, 前者在编译阶段将`a`加到作用域，后者在运行阶段执行
+- 对于一个表达式`var a = 2`, JS 引擎看到的是两个表达式`var a`和`a = 2`, 前者在编译阶段将`a`加到作用域，后者在运行阶段执行
 
 ### 作用域
 
@@ -59,7 +59,22 @@
 - 块作用域，大括号对`{..}`
 - `var`和`function`声明的变量会在作用域内提升
 - 重复声明一个变量，后者覆盖前者（避免重复声明）
+- 垃圾回收, 块作用域结束后其内部变量所占用内存都可被回收
 
+示例
+
+```js
+function process(data) {
+	// do something interesting
+}
+
+// anything declared inside this block can go away after!
+{
+	let someReallyBigData = { .. };
+
+	process( someReallyBigData );
+}
+```
 
 ### 立即调用表达式
 
@@ -68,24 +83,24 @@
 > 简称 IIFE，创建局部作用域，主要是为了防止内部变量对外部环境造成影响
 
 要点
+
 - `(function foo(){ .. })()`, 第一对`()`使函数变为函数表达式，第二对`()`执行函数
 - 也可以这样写`(function(){ .. }())`,风格选择问题
 
 示例
 
-一种变体，这种模式用在UMD项目中
+一种变体，这种模式用在 UMD 项目中
+
 ```js
-var a = 2;
+var a = 2
 
-(function IIFE( def ){
-	def( window );
-})(function def( global ){
-
-	var a = 3;
-	console.log( a ); // 3
-	console.log( global.a ); // 2
-
-});
+;(function IIFE(def) {
+  def(window)
+})(function def(global) {
+  var a = 3
+  console.log(a) // 3
+  console.log(global.a) // 2
+})
 ```
 
 ### 闭包
@@ -93,6 +108,55 @@ var a = 2;
 简述
 
 > 函数执行结束后仍然可以获取函数内部作用域变量的方式
+
+要点
+
+- 将函数作为值传递到其词法作用域外再去执行的情况都可以称为闭包，此时函数依然可以访问其原词法作用域
+- 常用的闭包：回调函数，模块
+
+示例
+
+一个常见的闭包
+
+```js
+function wait(message) {
+  setTimeout(function timer() {
+    console.log(message)
+  }, 1000)
+}
+
+wait('Hello, closure!')
+```
+
+循环与闭包
+
+```js
+// 下例输出将与预期不符
+for (var i = 1; i <= 5; i++) {
+  setTimeout(function timer() {
+    console.log(i)
+  }, i * 1000)
+}
+// 每隔一秒输出一个6
+
+// 通过给每次循环各创建一个作用域来保存循环过程中的i
+for (var i = 1; i <= 5; i++) {
+  ;(function(j) {
+    setTimeout(function timer() {
+      console.log(j)
+    }, j * 1000)
+  })(i)
+}
+// 每隔一秒分别输出1，2，3，4，5
+
+// 使用let声明for循环中的变量，每次循环都会重新声明一个新的i
+for (let i = 1; i <= 5; i++) {
+  setTimeout(function timer() {
+    console.log(i)
+  }, i * 1000)
+}
+// 每隔一秒分别输出1，2，3，4，5
+```
 
 ### Polyfilling
 
