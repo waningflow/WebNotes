@@ -40,6 +40,10 @@
   - RHS（Right-hand Side），赋值的源，如果 RHS look-up 在所有嵌套作用域中没有找到一个变量，则会抛出`ReferenceError`错误。如果对找到的变量做错误的操作，比如试图像函数一样执行一个`非函数`,则会抛出`TypeError`
 - 对于一个表达式`var a = 2`, JS 引擎看到的是两个表达式`var a`和`a = 2`, 前者在编译阶段将`a`加到作用域，后者在运行阶段执行
 
+### 对象
+
+
+
 ### 作用域
 
 简述
@@ -212,7 +216,6 @@ if (!Number.isNaN) {
 要点
 
 - 更短的函数
-  - 不解释
 - 不绑定 this
   - 不会创建自己的 this,只会从自己的作用域链的上一层继承 this
   - 使用 call(), apply(), bind()方法时，只能传递参数, 不能绑定 this, 他们的第一个参数会被忽略
@@ -241,7 +244,7 @@ if (!Number.isNaN) {
 - this 的指向取决于函数的调用位置
 - 无其他规则适用时，this 默认绑定到全局，global，window 或 undefined(严格模式下)
 - 使用 call，apply 显性绑定 this，使用 bind 强制绑定 this
-- 一些内建函数支持传递一个额外参数绑定 this，比如 forEach
+- 一些内置函数支持传递一个额外参数绑定 this，比如 forEach
 - 显性绑定优先于隐性绑定，new 绑定优先于隐性绑定，new 绑定也会覆盖强制绑定
 - 判断 this 的几个步骤
   - `var bar = new foo()`, 如果是用 new 绑定，则 this 是新构建的对象
@@ -251,7 +254,7 @@ if (!Number.isNaN) {
 - 一些例外
   - `foo.call( null )`，如果向 call，apply，bind 指定 null 或者 undefined 作为 this，那将被忽略，转而用默认绑定到全局。相对安全的做法可以传一个绝对空的对象作为 this，如`foo.apply( Object.create( null ), [2, 3] )`
   - 函数间接引用
-- 箭头函数使用词法作用域来绑定this， 作为早期使用`self = this`的一种替代方式
+- 箭头函数使用词法作用域来绑定 this， 作为早期使用`self = this`的一种替代方式
 
 示例
 
