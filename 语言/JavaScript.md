@@ -251,6 +251,7 @@ if (!Number.isNaN) {
 - 一些例外
   - `foo.call( null )`，如果向 call，apply，bind 指定 null 或者 undefined 作为 this，那将被忽略，转而用默认绑定到全局。相对安全的做法可以传一个绝对空的对象作为 this，如`foo.apply( Object.create( null ), [2, 3] )`
   - 函数间接引用
+- 箭头函数使用词法作用域来绑定this， 作为早期使用`self = this`的一种替代方式
 
 示例
 
