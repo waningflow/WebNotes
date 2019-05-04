@@ -239,6 +239,18 @@ if (!Number.isNaN) {
 要点
 
 - this 的指向取决于函数的调用位置
+- 无其他规则适用时，this 默认绑定到全局，global，window 或 undefined(严格模式下)
+- 使用 call，apply 显性绑定 this，使用 bind 强制绑定 this
+- 一些内建函数支持传递一个额外参数绑定 this，比如 forEach
+- 显性绑定优先于隐性绑定，new 绑定优先于隐性绑定，new 绑定也会覆盖强制绑定
+- 判断 this 的几个步骤
+  - `var bar = new foo()`, 如果是用 new 绑定，则 this 是新构建的对象
+  - `var bar = foo.call( obj2 )`，如果是用 call，apply 显性绑定（包括 bind），则 this 是指定的对象
+  - `var bar = obj1.foo()`， 如果函数调用隐性指定了环境，则 this 是该环境对象
+  - `var bar = foo()`，否则，默认是全局对象
+- 一些例外
+  - `foo.call( null )`，如果向 call，apply，bind 指定 null 或者 undefined 作为 this，那将被忽略，转而用默认绑定到全局。相对安全的做法可以传一个绝对空的对象作为 this，如`foo.apply( Object.create( null ), [2, 3] )`
+  - 函数间接引用
 
 示例
 
@@ -295,7 +307,80 @@ const answers2 = [
 // obj2,obj2,obj2,a,obj2,obj2,obj2,obj2
 ```
 
+一个简单的 bind 函数
+
+```js
+function bind(fn, obj) {
+  return function() {
+    return fn.apply(obj, arguments)
+  }
+}
+```
+
+函数柯里化以及 new 覆盖强制绑定
+
+```js
+function foo(p1, p2) {
+  this.val = p1 + p2
+}
+
+// using `null` here because we don't care about
+// the `this` hard-binding in this scenario, and
+// it will be overridden by the `new` call anyway!
+var bar = foo.bind(null, 'p1')
+
+var baz = new bar('p2')
+
+baz.val // p1p2
+```
+
+一个 softBind 函数，如果调用时 this 指向全局，则使用指定的对象作为 this
+
+```js
+if (!Function.prototype.softBind) {
+  Function.prototype.softBind = function(obj) {
+    var fn = this,
+      curried = [].slice.call(arguments, 1),
+      bound = function bound() {
+        return fn.apply(
+          !this ||
+            (typeof window !== 'undefined' && this === window) ||
+            (typeof global !== 'undefined' && this === global)
+            ? obj
+            : this,
+          curried.concat.apply(curried, arguments)
+        )
+      }
+    bound.prototype = Object.create(fn.prototype)
+    return bound
+  }
+}
+```
+
 ### new 操作符
+
+要点
+
+- 四步
+  - 创建一个空对象
+  - 将该对象原型指向构造函数的 prototype
+  - 绑定该对象为 this 执行构造函数
+  - 除非构造函数自身返回了一个对象，否则将返回创建的对象
+
+示例
+
+一个简单实现
+
+```js
+function new(func){
+	let obj = Object.create(func.prototype)
+	let res = func.apply(obj)
+	if(typeof res === 'object'){
+		return res
+	}
+	return obj
+}
+```
 
 ### call 函数
 
