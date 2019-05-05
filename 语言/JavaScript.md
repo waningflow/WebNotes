@@ -42,7 +42,9 @@
 
 ### 对象
 
+要点
 
+- 内置对象，`String Number Boolean Object Function Array Date RegExp Error`
 
 ### 作用域
 
