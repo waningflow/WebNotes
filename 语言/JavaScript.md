@@ -45,6 +45,124 @@
 要点
 
 - 内置对象，`String Number Boolean Object Function Array Date RegExp Error`
+- 两种创建方式
+  - 字面量
+  - 构造函数
+- 对象的属性都是 string 类型，也可以是 symbol 类型
+- 数组也是对象，可以添加属性，但添加数字类的属性会修改数组内容，如`myArray["3"] = "baz"`
+- 对象的复制，深浅拷贝。对象的循环引用，深拷贝何时打破循环还没有一个明确答案。对于 json 安全的对象可以简单的采取这种方式`var newObj = JSON.parse( JSON.stringify( someObj ) );`
+- 属性描述符, `Object.defineProperty()`
+  - `value`
+  - `writable`
+  - `enumerable`
+  - `configurable`, 是否能修改属性描述符，所以把`configurable`改成`false`是单向操作,无法撤回（但即使`configurable:false`,`writable`也能从`ture`改成`false`）。`configurable:false`也能阻止`delete`属性
+- Immutability
+  - 组合`writable:false`和`configurable:false`实现属性不变
+  - 使用`Object.preventExtensions(..)`阻止添加新属性
+  - `Object.seal(..)`
+  - `Object.freeze(..)`
+- [[Get]],[[Set]],对象默认行为
+- Getters & Setters，属性级别
+- `in`会查找原型链，而`hasOwnProperty`不会
+- 对于`Object.create(null)`创建的对象没有`hasOwnProperty`方法，可以用`Object.prototype.hasOwnProperty.call(myObject,"a")`
+- `in`检查的是属性而非值，`4 in [2, 4, 6] === false`
+- 对象属性的遍历顺序不确保是一致的
+- `for..of`使用的是对象的`@@iterator`,数组有内置的`@@iterator`,所以可以直接遍历数组的值
+
+示例
+
+关于`in`和`hasOwnProperty`
+
+```js
+var myObject = {
+  a: 2
+}
+
+'a' in myObject // true
+'b' in myObject // false
+
+myObject.hasOwnProperty('a') // true
+myObject.hasOwnProperty('b') // false
+```
+
+关于`enumerable`
+
+```js
+var myObject = {}
+
+Object.defineProperty(
+  myObject,
+  'a',
+  // make `a` enumerable, as normal
+  { enumerable: true, value: 2 }
+)
+
+Object.defineProperty(
+  myObject,
+  'b',
+  // make `b` non-enumerable
+  { enumerable: false, value: 3 }
+)
+
+myObject.propertyIsEnumerable('a') // true
+myObject.propertyIsEnumerable('b') // false
+
+Object.keys(myObject) // ["a"]
+Object.getOwnPropertyNames(myObject) // ["a", "b"]
+```
+
+关于遍历器
+
+```js
+var myArray = [1, 2, 3]
+var it = myArray[Symbol.iterator]()
+
+it.next() // { value:1, done:false }
+it.next() // { value:2, done:false }
+it.next() // { value:3, done:false }
+it.next() // { done:true }
+```
+
+给对象自定义一个遍历器
+
+```js
+var myObject = {
+  a: 2,
+  b: 3
+}
+
+Object.defineProperty(myObject, Symbol.iterator, {
+  enumerable: false,
+  writable: false,
+  configurable: true,
+  value: function() {
+    var o = this
+    var idx = 0
+    var ks = Object.keys(o)
+    return {
+      next: function() {
+        return {
+          value: o[ks[idx++]],
+          done: idx > ks.length
+        }
+      }
+    }
+  }
+})
+
+// iterate `myObject` manually
+var it = myObject[Symbol.iterator]()
+it.next() // { value:2, done:false }
+it.next() // { value:3, done:false }
+it.next() // { value:undefined, done:true }
+
+// iterate `myObject` with `for..of`
+for (var v of myObject) {
+  console.log(v)
+}
+// 2
+// 3
+```
 
 ### 作用域
 
@@ -554,3 +672,34 @@ toyota.move()
 ```
 
 ### Object.defineProperty()
+
+### Symbol
+
+简述
+
+> 防止属性名冲突引入的独一无二的值
+
+要点
+
+- 内置的 Symbol 值
+  - `Symbol.hasInstance`
+  - `Symbol.isConcatSpreadable`
+  - `Symbol.species`
+  - `Symbol.match`
+  - `Symbol.replace`
+  - `Symbol.search`
+  - `Symbol.split`
+  - `Symbol.iterator`, 指向默认遍历器方法
+  - `Symbol.toPrimitive`
+  - `Symbol.toStringTag`
+  - `Symbol.unscopables`
+
+示例
+
+```js
+Symbol.for('bar') === Symbol.for('bar')
+// true
+
+Symbol('bar') === Symbol('bar')
+// false
+```
