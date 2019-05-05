@@ -164,6 +164,13 @@ for (var v of myObject) {
 // 3
 ```
 
+### 函数
+
+要点
+
+- 所有命名参数都是 arguments 对象中对应索引的别名
+- 永远不要修改 arguments 对象，使用[].slice.call(arguments)复制 arguments 之后再修改
+
 ### 作用域
 
 简述
@@ -670,6 +677,18 @@ Car.prototype.move = function move() {
 const toyota = new Car('Toyota')
 toyota.move()
 ```
+
+### Class
+
+简述
+
+> 类是一直设计模式，JS 没有类，只不过有相似的语法，表现与其他语言中的类非常不一样
+
+要点
+
+- 传统的类是“复制”，实例化时，行为从类复制到实例，继承时，行为从父类复制到子类
+- 多态（在多层继承关系中有相同名称的方法），看起来是子类引用父类的相对链接，其实是行为复制的结果
+- JS中“类”的机制，不是复制，而是原型链
 
 ### Object.defineProperty()
 
