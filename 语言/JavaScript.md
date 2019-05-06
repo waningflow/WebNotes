@@ -68,6 +68,10 @@
 - `in`检查的是属性而非值，`4 in [2, 4, 6] === false`
 - 对象属性的遍历顺序不确保是一致的
 - `for..of`使用的是对象的`@@iterator`,数组有内置的`@@iterator`,所以可以直接遍历数组的值
+- 对于`myObject.foo = "bar"`, 当 `foo` 不直接存在于 `myObject`，但 存在 于 `myObject` 的 `[[Prototype]]` 链的更高层时
+  - 如果不是`writable:false`,那么直接给`myObject`添加一个新属性`foo`,形成一个 遮蔽属性
+  - 如果是`writable:false`，则该赋值操作被忽略，严格模式报错
+  - 如果是 setter，那么这个 setter 总是被调用。没有 foo 会被添加到（也就是遮蔽在）myObject 上
 
 示例
 
@@ -162,6 +166,29 @@ for (var v of myObject) {
 }
 // 2
 // 3
+```
+
+隐含地发生遮蔽
+
+```js
+var anotherObject = {
+  a: 2
+}
+
+var myObject = Object.create(anotherObject)
+
+anotherObject.a // 2
+myObject.a // 2
+
+anotherObject.hasOwnProperty('a') // true
+myObject.hasOwnProperty('a') // false
+
+myObject.a++ // 噢，隐式遮蔽！
+
+anotherObject.a // 2
+myObject.a // 3
+
+myObject.hasOwnProperty('a') // true
 ```
 
 ### 函数
@@ -544,6 +571,9 @@ function new(func){
   - 性能问题，导致浏览器基于对象结构的优化失效
   - 行为无法预测
 - 使用 Object.create 给新对象设置原型
+- `a1.constructor` 是极其不可靠的，一般来说，这样的引用应当尽量避免
+- instanceof 运算符用于测试构造函数的 prototype 属性是否出现在对象的原型链中的任何位置
+- isPrototypeOf() 方法用于测试一个对象是否存在于另一个对象的原型链上
 
 示例
 
@@ -678,19 +708,98 @@ const toyota = new Car('Toyota')
 toyota.move()
 ```
 
+链接原型的方式
+
+```js
+// ES6 以前
+// 扔掉默认既存的 `Bar.prototype`
+Bar.prototype = Object.create(Foo.prototype)
+
+// ES6+
+// 修改既存的 `Bar.prototype`
+Object.setPrototypeOf(Bar.prototype, Foo.prototype)
+```
+
+`__proto__`的简单实现
+
+```js
+Object.defineProperty(Object.prototype, '__proto__', {
+  get: function() {
+    return Object.getPrototypeOf(this)
+  },
+  set: function(o) {
+    // ES6 的 setPrototypeOf(..)
+    Object.setPrototypeOf(this, o)
+    return o
+  }
+})
+```
+
 ### Class
 
 简述
 
-> 类是一直设计模式，JS 没有类，只不过有相似的语法，表现与其他语言中的类非常不一样
+> “类”是一直设计模式，JS 没有“类”, 只有对象
 
 要点
 
 - 传统的类是“复制”，实例化时，行为从类复制到实例，继承时，行为从父类复制到子类
 - 多态（在多层继承关系中有相同名称的方法），看起来是子类引用父类的相对链接，其实是行为复制的结果
-- JS中“类”的机制，不是复制，而是原型链
+- JS 中“类”的机制，不是复制，而是原型链
+- 所有的函数默认都会得到一个公有的，不可枚举的属性，称为 prototype，它可以指向任意的对象
+- “继承”意味着 拷贝 操作，而 JavaScript 不拷贝对象属性）。相反，JS 在两个对象间建立链接，一个对象实质上可以将对属性/函数的访问 委托 到另一个对象上。对于描述 JavaScript 对象链接机制来说，“委托”是一个准确得多的术语
+- “构造器”是在前面 用 new 关键字调用的任何函数
+- class 很大程度上仅仅是一个既存的 [[Prototype]]（委托）机制的语法糖
 
-### Object.defineProperty()
+示例
+
+super 在声明时静态绑定的，而非调用时动态绑定。解决这个问题可以用 toMethod(..) 来绑定/重绑定方法
+
+```js
+class P {
+  foo() {
+    console.log('P.foo')
+  }
+}
+
+class C extends P {
+  foo() {
+    super()
+  }
+}
+
+var c1 = new C()
+c1.foo() // "P.foo"
+
+var D = {
+  foo: function() {
+    console.log('D.foo')
+  }
+}
+
+var E = {
+  foo: C.prototype.foo
+}
+
+// E 链接到 D 来进行委托
+Object.setPrototypeOf(E, D)
+
+E.foo() // "P.foo"
+```
+
+### 行为委托
+
+简述
+
+> 面向委托的设计
+
+要点
+
+- “OLOO”（objects-linked-to-other-objects（链接到其他对象的对象））风格
+- 委托更适于作为内部实现的细节，而不是直接暴露在 API 接口的设计中
+- 不允许相互委托，因为如果制造一个在任意一方都不存在的属性/方法引用，就会在 [[Prototype]] 上得到一个无限递归的循环
+- “duck typing（鸭子类型）”（谚语：“如果它看起来像鸭子，叫起来像鸭子，那么它一定是一只鸭子”。）
+  - 健壮性很差，例如，如果任何对象 恰好有一个 then() 方法，ES6 的 Promises 将会无条件地假设这个对象 是“thenable” 的，而且因此会期望它按照所有的 Promises 标准行为那样一致地动作
 
 ### Symbol
 
