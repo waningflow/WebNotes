@@ -20,6 +20,9 @@
   - 其他不等符号如`>`，允许强制转换
 - 变量没有类型 -- 值才有类型
 - typeof 的一种特殊的安全防卫行为, 对于未声明的变量返回 undefined
+- 内部 [[Class]]，typeof 的结果为 "object" 的值（比如数组）被额外地打上了一个内部的标签属性 [[Class]]，通过`Object.prototype.toString(..)`来查看
+- 封箱，访问简单基本类型标量的 length 属性或某些 String.prototype 方法，JS 会自动地“封箱”这个值（用它所对应种类的对象包装器把它包起来），以满足这样的属性/方法访问
+- 开箱，取出一个包装器对象底层的基本类型值，可以使用 valueOf() 方法
 
 示例
 
@@ -63,6 +66,8 @@ if (window.DEBUG) {
 - 特殊等价，使用`Object.is(..)`
 - 简单值（也叫基本标量） 总是 通过值拷贝来赋予/传递：null、undefined、string、number、 boolean、以及 ES6 的 symbol
 - 复合值 —— object（包括 array，和所有的对象包装器 ）和 function —— 总是 在赋值或传递时创建一个引用的拷贝
+- void 操作符允许你从任意另一个值中创建 undefined 值
+- JS 中的引用指向一个（共享的） 值，所以如果你有十个不同的引用，它们都总是同一个共享值的不同引用；它们没有一个是另一个的引用/指针
 
 示例
 
