@@ -23,6 +23,16 @@
 - 内部 [[Class]]，typeof 的结果为 "object" 的值（比如数组）被额外地打上了一个内部的标签属性 [[Class]]，通过`Object.prototype.toString(..)`来查看
 - 封箱，访问简单基本类型标量的 length 属性或某些 String.prototype 方法，JS 会自动地“封箱”这个值（用它所对应种类的对象包装器把它包起来），以满足这样的属性/方法访问
 - 开箱，取出一个包装器对象底层的基本类型值，可以使用 valueOf() 方法
+- 强制转换
+  - `ToString`，当任何一个非 string 值被强制转换为一个 string 表现形式时，由 ToString 抽象操作处理
+    - string、number、boolean、和 null 值在 JSON 字符串化时，与它们通过 ToString 抽象操作的规则强制转换为 string 值的方式基本上是相同的
+    - 如果传递一个 object 值给 JSON.stringify(..)，而这个 object 上拥有一个 toJSON() 方法，那么在字符串化之前，toJSON() 就会被自动调用来将这个值（某种意义上）“强制转换”为 JSON 安全 的
+  - `ToNumber`，如果任何非 number 值，以一种要求它是 number 的方式被使用，比如数学操作，就会发生 ToNumber 抽象操作
+  - `ToBoolean`
+    - falsy 对象看起来和动起来都像一个普通对象（属性，等等）的值，但是当你强制转换它为一个 boolean 时，它会变为一个 false 值，与包装着 falsy 值的对象并不是一个东西
+- 明确地 Strings 和 Numbers 转换
+  - 用 String()和 Number()
+  - 一元操作符将字符串转换为数字，`+"23" === 23`，也可以将 Date 对象转成数字`+new Date()`
 
 示例
 
@@ -43,6 +53,38 @@ if (typeof DEBUG !== 'undefined') {
 if (window.DEBUG) {
   // ..
 }
+```
+
+JSON.stringify 相关
+
+```js
+JSON.stringify(undefined) // undefined
+JSON.stringify(function() {}) // undefined
+
+JSON.stringify([1, undefined, function() {}, 4]) // "[1,null,null,4]"
+JSON.stringify({ a: 2, b: function() {} }) // "{"a":2}"
+
+var o = {}
+
+var a = {
+  b: 42,
+  c: o,
+  d: function() {}
+}
+
+// 在 `a` 内部制造一个循环引用
+o.e = a
+
+// 这会因循环引用而抛出一个错误
+// JSON.stringify( a );
+
+// 自定义一个 JSON 值序列化
+a.toJSON = function() {
+  // 序列化仅包含属性 `b`
+  return { b: this.b }
+}
+
+JSON.stringify(a) // "{"b":42}"
 ```
 
 ### 变量
