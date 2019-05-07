@@ -18,6 +18,29 @@
   - `==`,允许强制转换
   - `===`,不允许强制转换
   - 其他不等符号如`>`，允许强制转换
+- 变量没有类型 -- 值才有类型
+- typeof 的一种特殊的安全防卫行为, 对于未声明的变量返回 undefined
+
+示例
+
+typeof 的安全防卫
+
+```js
+// 噢，这将抛出一个错误！
+if (DEBUG) {
+  console.log('Debugging is starting')
+}
+
+// 这是一个安全的存在性检查
+if (typeof DEBUG !== 'undefined') {
+  console.log('Debugging is starting')
+}
+
+// 或者检查全局对象
+if (window.DEBUG) {
+  // ..
+}
+```
 
 ### 变量
 
@@ -26,6 +49,110 @@
 - var 声明的变量在作用域内自动提升
 - 访问作用域内不存在的变量会报`ReferenceError`, 给未声明的变量赋值在非严格模式下会在全局作用域创建一个变量，而在严格模式下会报`ReferenceError`
 - let 声明的变量在一个 block(`{}`)内有效，在 block 内 let 声明之前称为`TDZ`(暂时性死区)，此时访问变量会报`ReferenceError`
+
+### 值
+
+要点
+
+- 类 array，一个数字索引的值的集合，例如函数的 arguments 对象
+- 二进制浮点数的副作用，`0.1 + 0.2 === 0.3; // false`,使用容差值`Number.EPSILON`来比较
+- 可以被表示的最大的浮点值大概是 1.798e+308，预定义为 `Number.MAX_VALUE`。在极小的一端，`Number.MIN_VALUE` 大概是 5e-324
+- 安全整数范围,可以“安全地”被表示的最大整数是 2^53 - 1,预定义为`Number.MAX_SAFE_INTEGER`,最小值`Number.MIN_SAFE_INTEGER`
+- `null` 是一个特殊的关键字，不是一个标识符,`undefined` 是一个持有内建的值 `undefined` 的内建标识符
+- `NaN` 是一种一个被赋予了特殊意义的普通的值,`NaN !== NaN`,使用`Number.isNaN(..)`判断
+- 特殊等价，使用`Object.is(..)`
+- 简单值（也叫基本标量） 总是 通过值拷贝来赋予/传递：null、undefined、string、number、 boolean、以及 ES6 的 symbol
+- 复合值 —— object（包括 array，和所有的对象包装器 ）和 function —— 总是 在赋值或传递时创建一个引用的拷贝
+
+示例
+
+isNaN 的 bug
+
+```js
+var a = 2 / 'foo'
+var b = 'foo'
+
+a // NaN
+b // "foo"
+
+window.isNaN(a) // true
+window.isNaN(b) // true -- 噢!
+```
+
+Number.isNaN(..)的实现
+
+```js
+if (!Number.isNaN) {
+  Number.isNaN = function(n) {
+    return typeof n === 'number' && window.isNaN(n)
+  }
+}
+
+var a = 2 / 'foo'
+var b = 'foo'
+
+Number.isNaN(a) // true
+Number.isNaN(b) // false -- 咻!
+
+// 或者更简单的
+if (!Number.isNaN) {
+  Number.isNaN = function(n) {
+    return n !== n
+  }
+}
+```
+
+检查`-0`
+
+```js
+function isNegZero(n) {
+  n = Number(n)
+  return n === 0 && 1 / n === -Infinity
+}
+
+isNegZero(-0) // true
+isNegZero(0 / -3) // true
+isNegZero(0) // false
+```
+
+`Object.is(..)`的填补
+
+```js
+if (!Object.is) {
+  Object.is = function(v1, v2) {
+    // 测试 `-0`
+    if (v1 === 0 && v2 === 0) {
+      return 1 / v1 === 1 / v2
+    }
+    // 测试 `NaN`
+    if (v1 !== v1) {
+      return v2 !== v2
+    }
+    // 其他情况
+    return v1 === v2
+  }
+}
+```
+
+不能使用一个引用来改变另一个引用所指向的值
+
+```js
+function foo(x) {
+  x.push(4)
+  x // [1,2,3,4]
+
+  // 稍后
+  x = [4, 5, 6]
+  x.push(7)
+  x // [4,5,6,7]
+}
+
+var a = [1, 2, 3]
+
+foo(a)
+
+a // [1,2,3,4] 不是 [4,5,6,7]
+```
 
 ### 编译原理
 
