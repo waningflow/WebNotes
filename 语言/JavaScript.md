@@ -27,12 +27,26 @@
   - `ToString`，当任何一个非 string 值被强制转换为一个 string 表现形式时，由 ToString 抽象操作处理
     - string、number、boolean、和 null 值在 JSON 字符串化时，与它们通过 ToString 抽象操作的规则强制转换为 string 值的方式基本上是相同的
     - 如果传递一个 object 值给 JSON.stringify(..)，而这个 object 上拥有一个 toJSON() 方法，那么在字符串化之前，toJSON() 就会被自动调用来将这个值（某种意义上）“强制转换”为 JSON 安全 的
-  - `ToNumber`，如果任何非 number 值，以一种要求它是 number 的方式被使用，比如数学操作，就会发生 ToNumber 抽象操作
+  - `ToNumber`，如果任何非 number 值，以一种要求它是 number 的方式被使用，比如数学操作，就会发生 ToNumber 抽象操作。
   - `ToBoolean`
     - falsy 对象看起来和动起来都像一个普通对象（属性，等等）的值，但是当你强制转换它为一个 boolean 时，它会变为一个 false 值，与包装着 falsy 值的对象并不是一个东西
+  - `ToPrimitive`, 查询 valueOf()如果没有返回一个基本类型值，再调用 toString()
 - 明确地 Strings 和 Numbers 转换
-  - 用 String()和 Number()
+  - 用 String()和 Number()强制转换
   - 一元操作符将字符串转换为数字，`+"23" === 23`，也可以将 Date 对象转成数字`+new Date()`
+  - `~`操作符首先将值“强制转换”为一个 32 位 number 值，然后实施按位取反（翻转每一个比特位）。只有`~-1`产生结果 0，-1 通常称为一个“哨兵值”，因此可以这样`~a.indexOf( "lo" )`
+  - `~~`可以将值截断为一个（32 位）整数
+  - 从一个字符串中解析出一个数字是 容忍 非数字字符的 —— 从左到右，如果遇到非数字字符就停止解析 —— 而强制转换是 不容忍 并且会失败而得出值 NaN
+  - parseInt(..)将它的值强制转换为 string 来实施解析(通过 toString)。`parseInt( 1/0, 19 )`,实质上是`实质上是parseInt( "Infinity", 19 )`
+- 明确地：\* --> Boolean
+  - Boolean(..)或!!强制转换
+- 隐含地：Strings <--> Numbers
+  - 如果+的两个操作数之一是一个 string，那么操作就会是 string 连接。否则，它总是数字加法。
+- 一个&&或||操作符产生的值不见得是 Boolean 类型。这个产生的值将总是两个操作数表达式其中之一的值
+- 在两个 object 被比较的情况下，==和===的行为相同,仅在它们引用 完全相同的值 时 相等,没有强制转换发生
+- string 与 number 比较，会先将 string 转换为 number
+- `"42" == true // false`,Boolean 会实施 ToNumber(x)，将 true 强制转换为 1。不要使用== true 或== false
+- `null == undefined`
 
 示例
 
@@ -85,6 +99,19 @@ a.toJSON = function() {
 }
 
 JSON.stringify(a) // "{"b":42}"
+```
+
+解析和强转
+
+```js
+var a = '42'
+var b = '42px'
+
+Number(a) // 42
+parseInt(a) // 42
+
+Number(b) // NaN
+parseInt(b) // 42
 ```
 
 ### 变量
