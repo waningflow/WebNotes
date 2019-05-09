@@ -238,6 +238,17 @@ a // [1,2,3,4] 不是 [4,5,6,7]
 - 表达式副作用, 表达式求值过程中修改了某些变量的值（个人理解）
 - `labeled statements`，知道就行了
 - JS 文法隐藏的性质：它没有 else if,如果附着在 if 和 else 语句后面的代码块儿仅包含一个语句时，if 和 else 语句允许省略这些代码块儿周围的{ }
+- 操作符优先级[参考](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_Precedence)
+- 短接，对于&&和||两个操作符来说，如果左手边的操作数足够确定操作的结果，那么右手边的操作数将 不会被求值
+- 结合性，一般来说，操作符不是左结合的就是右结合的，这要看 分组是从左边发生还是从右边发生，例如，&&和||是左结合的，`? :`是右结合的，`a ? b : c ? d : e`等同于`a ? b : (c ? d : e)`,`=`操作符是右结合的，`a = b = c = 42`等同于`a = (b = (c = 42))`
+- 自动分号,ASI(Automatic Semicolon Insertion —— 自动分号插入),ASI将仅在换行存在时起作用,分号不会被插入一行的中间
+- JS中的“宗教战争”
+  - 制表还是空格
+  - 是否应当严重/唯一地依赖ASI
+- ES6定义的TDZ指的是代码中还不能使用变量引用的地方，虽然typeof有一个例外，它对于未声明的变量是安全的(undefined)，但是对于TDZ引用却没有这样的安全例外(ReferenceError)
+- 使用ES6的参数默认值时，如果你省略一个参数，或者你在它的位置上传递一个undefined值的话，就会应用这个默认值
+- 错误类型，“早期”（编译器抛出的不可捕获的）和“运行时”（可以try..catch的）
+- 在finally子句中的代码 总是 运行的（无论发生什么），而且它总是在try（和catch，如果存在的话）完成后立即运行,一个在finally内部的return有着覆盖前一个try或catch子句中的return的特殊能力
 
 示例
 
@@ -327,6 +338,39 @@ if (a) {
 }
 ```
 
+一个变态的例子 
+
+```js
+var a = 42;
+var b = "foo";
+var c = false;
+
+var d = a && b || c ? c || b ? a : c && b : a;
+
+d;		// ??
+
+// 根据操作符优先级顺序，等同于
+(a && b || c) ? (c || b) ? a : (c && b) : a
+```
+
+`try...finally`
+
+```js
+ function foo() {
+	try {
+		throw 42;
+	}
+	finally {
+		console.log( "Hello" );
+	}
+
+	console.log( "never runs" );
+}
+
+console.log( foo() );
+// Hello
+// Uncaught Exception: 42
+```
 ### 编译原理
 
 要点
