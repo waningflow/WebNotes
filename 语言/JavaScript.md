@@ -46,7 +46,7 @@
 - 在两个 object 被比较的情况下，==和===的行为相同,仅在它们引用 完全相同的值 时 相等,没有强制转换发生
 - string 与 number 比较，会先将 string 转换为 number
 - `"42" == true // false`,Boolean 会实施 ToNumber(x)，将 true 强制转换为 1。不要使用== true 或== false
-- `null == undefined`
+- `null == undefined`,`Number(null) === 0`, `Number(undefined) === NaN`
 
 示例
 
