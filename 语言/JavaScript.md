@@ -241,20 +241,20 @@ a // [1,2,3,4] 不是 [4,5,6,7]
 - 操作符优先级[参考](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_Precedence)
 - 短接，对于&&和||两个操作符来说，如果左手边的操作数足够确定操作的结果，那么右手边的操作数将 不会被求值
 - 结合性，一般来说，操作符不是左结合的就是右结合的，这要看 分组是从左边发生还是从右边发生，例如，&&和||是左结合的，`? :`是右结合的，`a ? b : c ? d : e`等同于`a ? b : (c ? d : e)`,`=`操作符是右结合的，`a = b = c = 42`等同于`a = (b = (c = 42))`
-- 自动分号,ASI(Automatic Semicolon Insertion —— 自动分号插入),ASI将仅在换行存在时起作用,分号不会被插入一行的中间
-- JS中的“宗教战争”
+- 自动分号,ASI(Automatic Semicolon Insertion —— 自动分号插入),ASI 将仅在换行存在时起作用,分号不会被插入一行的中间
+- JS 中的“宗教战争”
   - 制表还是空格
-  - 是否应当严重/唯一地依赖ASI
-- ES6定义的TDZ指的是代码中还不能使用变量引用的地方，虽然typeof有一个例外，它对于未声明的变量是安全的(undefined)，但是对于TDZ引用却没有这样的安全例外(ReferenceError)
-- 使用ES6的参数默认值时，如果你省略一个参数，或者你在它的位置上传递一个undefined值的话，就会应用这个默认值
-- 错误类型，“早期”（编译器抛出的不可捕获的）和“运行时”（可以try..catch的）
-- 在finally子句中的代码 总是 运行的（无论发生什么），而且它总是在try（和catch，如果存在的话）完成后立即运行,一个在finally内部的return有着覆盖前一个try或catch子句中的return的特殊能力
+  - 是否应当严重/唯一地依赖 ASI
+- ES6 定义的 TDZ 指的是代码中还不能使用变量引用的地方，虽然 typeof 有一个例外，它对于未声明的变量是安全的(undefined)，但是对于 TDZ 引用却没有这样的安全例外(ReferenceError)
+- 使用 ES6 的参数默认值时，如果你省略一个参数，或者你在它的位置上传递一个 undefined 值的话，就会应用这个默认值
+- 错误类型，“早期”（编译器抛出的不可捕获的）和“运行时”（可以 try..catch 的）
+- 在 finally 子句中的代码 总是 运行的（无论发生什么），而且它总是在 try（和 catch，如果存在的话）完成后立即运行,一个在 finally 内部的 return 有着覆盖前一个 try 或 catch 子句中的 return 的特殊能力
 - 一些实现的限制
   - 在字符串字面量（不是一个字符串变量）中允许出现的最大字符个数
   - 在一个函数调用的参数值中可以发送的数据的大小（字节数，也称为栈的大小）
   - 在一个函数声明中的参数数量
   - 没有经过优化的调用栈最大深度（比如，使用递归时）：从一个函数到另一个函数的调用链能有多长
-  - JS程序可以持续运行并阻塞浏览器的秒数
+  - JS 程序可以持续运行并阻塞浏览器的秒数
   - 变量名的最大长度
 
 示例
@@ -316,13 +316,6 @@ foo: for (var i = 0; i < 4; i++) {
 // 3 2
 ```
 
-一个坑
-
-```js
-[] + {}; // "[object Object]"
-{} + []; // 0
-```
-
 原来 js 里面并没有 else if...
 
 ```js
@@ -345,39 +338,39 @@ if (a) {
 }
 ```
 
-一个变态的例子 
+一个变态的例子
 
 ```js
-var a = 42;
-var b = "foo";
-var c = false;
+var a = 42
+var b = 'foo'
+var c = false
 
-var d = a && b || c ? c || b ? a : c && b : a;
+var d = (a && b) || c ? (c || b ? a : c && b) : a
 
-d;		// ??
+d // ??
 
 // 根据操作符优先级顺序，等同于
-(a && b || c) ? (c || b) ? a : (c && b) : a
+;(a && b) || c ? (c || b ? a : c && b) : a
 ```
 
 `try...finally`
 
 ```js
- function foo() {
-	try {
-		throw 42;
-	}
-	finally {
-		console.log( "Hello" );
-	}
+function foo() {
+  try {
+    throw 42
+  } finally {
+    console.log('Hello')
+  }
 
-	console.log( "never runs" );
+  console.log('never runs')
 }
 
-console.log( foo() );
+console.log(foo())
 // Hello
 // Uncaught Exception: 42
 ```
+
 ### 编译原理
 
 要点
@@ -899,6 +892,10 @@ function new(func){
 
 ### 异步
 
+简述
+
+> 单线程事件轮询队列
+
 要点
 
 - 事件轮询，有一个持续不断的循环，这个循环的每一次迭代称为一个“tick”。在每一个“tick”中，如果队列中有一个事件在等待，它就会被取出执行。这些事件就是你的函数回调
@@ -907,8 +904,57 @@ function new(func){
   - 单线程事件轮询
   - 协作
 - 竞合状态，非互动，互动
-- “工作队列”是一个挂靠在事件轮询队列的每个tick末尾的队列
-- 语句排序,代码中表达语句的顺序没有必要与JS引擎执行它们的顺序相同
+- “工作队列”是一个挂靠在事件轮询队列的每个 tick 末尾的队列
+- 语句排序,代码中表达语句的顺序没有必要与 JS 引擎执行它们的顺序相同
+
+### 回调
+
+简述
+
+> JavaScript 最基础的异步模式
+
+要点
+
+- 顺序的，阻塞的大脑规划行为和面向回调的异步代码不能很好地匹配
+- 回调函数的执行情况难以保证，尤其是使用第三方工具时，出现控制反转的信任问题
+- 尝试拯救回调
+  - 提供了分离的回调（一个用作成功的通知，一个用作错误的通知）
+  - 错误优先风格（Node 风格），一个回调的第一个参数为一个错误对象保留（如果有的话）。如果成功，这个参数将会是空/falsy（而其他后续的参数将是成功的数据），但如果出现了错误的结果，这第一个参数就会被设置/truthy
+  - 回调从不被调用的信任问题，通过设置超时来取消事件
+  - 总是异步地调用回调
+
+示例
+
+一个将函数异步化的例子
+
+```js
+function asyncify(fn) {
+  var orig_fn = fn,
+    intv = setTimeout(function() {
+      intv = null
+      if (fn) fn()
+    }, 0)
+  fn = null
+
+  return function() {
+    // 触发太快，在`intv`计时器触发来
+    // 表示异步回合已经过去之前？
+    if (intv) {
+      fn = orig_fn.bind.apply(
+        orig_fn,
+        // 将包装函数的`this`加入`bind(..)`调用的
+        // 参数，同时currying其他所有的传入参数
+        [this].concat([].slice.call(arguments))
+      )
+    }
+    // 已经是异步
+    else {
+      // 调用原版的函数
+      orig_fn.apply(this, arguments)
+    }
+  }
+}
+```
 
 ### promise
 
