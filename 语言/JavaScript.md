@@ -1003,7 +1003,11 @@ function asyncify(fn) {
   - `any([ .. ])`,忽略任何拒绝，只有一个需要完成即可
   - `first([ .. ])`,忽略任何拒绝，而且一旦有一个 Promise 完成时，就立即完成
   - `last([ .. ])`很像`first([ .. ])`，但是只有最后一个完成胜出。
-- 如果一个空的array被传入Promise.all([ .. ])，它会立即完成，但Promise.race([ .. ])却会永远挂起，永远不会解析
+- 如果一个空的 array 被传入 Promise.all([ .. ])，它会立即完成，但 Promise.race([ .. ])却会永远挂起，永远不会解析
+- Promise 只能有一个单独的完成值或一个单独的拒绝理由
+  - 展开参数
+- 一个 Promise 只能被解析一次（成功或拒绝）
+- Promise不可撤销,许多Promise抽象库都提供取消Promise的功能,这违反了未来值的可靠性原则（外部不可变）
 
 示例
 
@@ -1046,6 +1050,52 @@ if (!Promise.first) {
           })
       })
     })
+  }
+}
+```
+
+展开参数
+
+```js
+function spread(fn) {
+  // 返回一个apply固定第一个参数是null
+  return Function.prototype.apply.bind(fn, null)
+}
+
+Promise.all(foo(10, 20)).then(
+  spread(function(x, y) {
+    console.log(x, y) // 200 599
+  })
+)
+
+// ES6的方式更简单
+Promise.all(foo(10, 20)).then(function([x, y]) {
+  console.log(x, y) // 200 599
+})
+```
+
+"promise 化"简单实现
+
+```js
+// 填补的安全检查
+if (!Promise.wrap) {
+  Promise.wrap = function(fn) {
+    return function() {
+      var args = [].slice.call(arguments)
+
+      return new Promise(function(resolve, reject) {
+        fn.apply(
+          null,
+          args.concat(function(err, v) {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(v)
+            }
+          })
+        )
+      })
+    }
   }
 }
 ```
