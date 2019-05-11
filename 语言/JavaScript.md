@@ -975,7 +975,82 @@ function asyncify(fn) {
   - 调用回调太少或太多次。一个 Promise 仅能被解析一次，所以任何 then(..)上注册的（每个）回调将仅仅被调用一次
   - 没能传递必要的环境/参数。Promise 可以拥有最多一个解析值
   - 吞掉了任何可能发生的错误/异常。如果在 Promise 的创建过程中的任意一点，或者在监听它的解析的过程中，一个 JS 异常错误发生的话，比如 TypeError 或 ReferenceError，这个异常将会被捕获，并且强制当前的 Promise 变为拒绝
-- Promise.resolve 会接受任何 thenable，而且将它展开直至非 thenable 值,然后返回一个真正的，纯粹的 Promise，一个你可以信任的东西
+- 链式流程
+  - 在一个 Promise 上调用 then(..)创建并返回一个新的 Promise
+  - then(..)的返回值做为被链接的 Promise 的完成值
+  - 假定的拒绝处理器仅仅简单地重新抛出错误，默认的完成处理器简单地将它收到的任何值传递给下一步
+  - 错误持续地在 Promise 链上传播，直到遇到一个明确定义的拒绝处理器
+- Promise.resolve(..)将会直接返回收到的纯粹的 Promise，或者将收到的 thenable 展开。如果展开这个 thenable 之后是一个拒绝状态，那么从 Promise.resolve(..)返回的 Promise 事实上是相同的拒绝状态
+- reject(..) 不会 像 resolve(..)那样进行展开,后续的拒绝处理器将会受到你传递给 reject(..)的实际的 Promise/thenable，而不是它底层的立即值
+- 错误处理
+  - `try..catch`仅能用于同步状态
+  - `then`中抛出的错误只有在其链接的 promise 中可以捕获
+  - Promise 的错误处理是一种“绝望的深渊”的设计。默认情况下，它假定你想让所有的错误都被 Promise 的状态吞掉，而且如果你忘记监听这个状态，错误就会默默地凋零/死去
+  - 为了回避把一个被遗忘/抛弃的 Promise 的错误无声地丢失，一些开发者宣称 Promise 链的“最佳实践”是，总是将你的链条以 catch(..)终结,但如果 catch 中也有错误呢...
+  - 处理未被捕获的错误
+    - 一些 Promise 库有一些附加的方法，可以注册某些类似于“全局的未处理拒绝”的处理器。使用一个任意长的计时器，比如说 3 秒，从拒绝的那一刻开始计时。如果一个 Promise 被拒绝但没有错误处理在计时器被触发前注册，那么它就假定你不会注册监听器了，所以它是“未被捕获的”
+    - 一种常见的建议是，Promise 应当增加一个 done(..)方法
+  - 理论上的探讨
+    - Promise 可以默认为是报告(向开发者控制台)一切拒绝的，就在下一个 Job 或事件轮询 tick，如果就在这时 Promise 上没有注册任何错误处理器
+    - 如果你希望拒绝的 Promise 在被监听前，将其拒绝状态保持一段不确定的时间。你可以调用 defer()，它会压制这个 Promise 自动报告错误
+- `Promise.all([ .. ])`, Promise.resolve(..)返回的主 Promise 将会在所有组成它的 promise 完成之后才会被完成。如果其中任意一个 promise 被拒绝，Promise.all([ .. ])的主 Promise 将立即被拒绝，并放弃所有其他 promise 的结果
+- `Promise.race([ .. ])`, 在任意一个 Promise 解析为完成时完成，而且它会在任意一个 Promise 解析为拒绝时拒绝
+- 被丢弃/忽略的 promise 发生了什么?Promise 不能被取消,只能被无声地忽略,这种模式中存在某种东西可以在超时后主动释放被占用的资源，或者取消任何它可能带来的副作用吗
+  - 一些开发者提议，Promise 需要一个 finally(..)回调注册机制，它总是在 Promise 解析时被调用，而且允许你制定任何可能的清理操作
+  - 制造一个静态的帮助工具观察（但不干涉）Promise 的解析
+- `all([ .. ])` 与 `race([ .. ])` 的变种
+  - `none([ .. ])`,所有的 Promise 都需要被拒绝
+  - `any([ .. ])`,忽略任何拒绝，只有一个需要完成即可
+  - `first([ .. ])`,忽略任何拒绝，而且一旦有一个 Promise 完成时，就立即完成
+  - `last([ .. ])`很像`first([ .. ])`，但是只有最后一个完成胜出。
+- 如果一个空的array被传入Promise.all([ .. ])，它会立即完成，但Promise.race([ .. ])却会永远挂起，永远不会解析
+
+示例
+
+错误处理
+
+```js
+var p = Promise.resolve(42)
+
+p.then(
+  function fulfilled(msg) {
+    // 数字没有字符串方法,
+    // 所以这里抛出一个错误
+    console.log(msg.toLowerCase())
+  },
+  function rejected(err) {
+    // 永远不会到这里
+  }
+)
+```
+
+实现的一个`Promise.first`
+
+```js
+// 填补的安全检查
+if (!Promise.first) {
+  Promise.first = function(prs) {
+    return new Promise(function(resolve, reject) {
+      let rejectError = []
+      // 迭代所有的promise
+      prs.forEach(function(pr) {
+        // 泛化它的值
+        Promise.resolve(pr)
+          // 无论哪一个首先成功完成，都由它来解析主promise
+          .then(resolve, function(err) {
+            rejectError.push(err)
+            // 在所有的promise都被拒绝时拒绝,返回最后一个错误
+            if (rejectError.length === prs.length) {
+              reject(rejectError)
+            }
+          })
+      })
+    })
+  }
+}
+```
+
+### generator
 
 ### async
 
