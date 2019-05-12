@@ -721,16 +721,6 @@ if (!Number.isNaN) {
   - 不能用作构造器，和 new 一起用会抛出错误
   - 没有 prototype 属性
 
-示例
-
-```
-
-```
-
-疑问
-
-> 鉴于 this 是词法层面上的，严格模式中与 this 相关的规则都将被忽略
-
 ### 关于 this
 
 简述
@@ -1119,6 +1109,11 @@ if (!Promise.wrap) {
   - 将 promise 逻辑作为实现细节隐藏起来
 - Generator 委托
   - yield 委托`yield *`
+- Generator 并发
+  - CSP（Communicating Sequential Processes——通信顺序处理）
+- Thunks,将多参数函数替换成单参数的版本，且只接受回调函数作为参数
+- generator 可以为了异步而 yield Promise，也可以为异步而 yield thunk。我们需要的只是一个更聪明的 run(..)工具
+- generator兼容旧环境，[自动转译](https://facebook.github.io/regenerator/)
 
 示例
 
@@ -1179,7 +1174,7 @@ function run(gen) {
           // 在成功的情况下继续异步循环，将解析的值送回generator
           handleNext,
 
-          // 如果`value`是一个拒绝的promise，就将错误传播回generator自己的错误处理g
+          // 如果`value`是一个拒绝的promise，就将错误传播回generator自己的错误处理, 同时要继续往下走流程,不能因为一个err就停止
           function handleErr(err) {
             return Promise.resolve(it.throw(err)).then(handleResult)
           }
@@ -1236,6 +1231,61 @@ function* bar() {
 }
 
 run(bar)
+```
+
+一个 thunkify
+
+```js
+// thunkory，产生一个thunk
+function thunkify(fn) {
+  var args = [].slice.call(arguments, 1)
+  return function(cb) {
+    args.push(cb)
+    return fn.apply(null, args)
+  }
+}
+
+// thunkify，产生一个thunkory（制造thunk的函数）
+function thunkify(fn) {
+  return function() {
+    var args = [].slice.call(arguments)
+    return function(cb) {
+      args.push(cb)
+      return fn.apply(null, args)
+    }
+  }
+}
+```
+
+比较 thunkify(..)和 promisify(..)
+
+```js
+// 对称的：构建问题的回答者
+var fooThunkory = thunkify(foo)
+var fooPromisory = promisify(foo)
+
+// 对称的：提出问题
+var fooThunk = fooThunkory(3, 4)
+var fooPromise = fooPromisory(3, 4)
+
+// 取得 thunk 的回答
+fooThunk(function(err, sum) {
+  if (err) {
+    console.error(err)
+  } else {
+    console.log(sum) // 7
+  }
+})
+
+// 取得 promise 的回答
+fooPromise.then(
+  function(sum) {
+    console.log(sum) // 7
+  },
+  function(err) {
+    console.error(err)
+  }
+)
 ```
 
 ### async
