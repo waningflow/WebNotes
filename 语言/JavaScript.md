@@ -1007,7 +1007,7 @@ function asyncify(fn) {
 - Promise 只能有一个单独的完成值或一个单独的拒绝理由
   - 展开参数
 - 一个 Promise 只能被解析一次（成功或拒绝）
-- Promise不可撤销,许多Promise抽象库都提供取消Promise的功能,这违反了未来值的可靠性原则（外部不可变）
+- Promise 不可撤销,许多 Promise 抽象库都提供取消 Promise 的功能,这违反了未来值的可靠性原则（外部不可变）
 
 示例
 
@@ -1102,7 +1102,147 @@ if (!Promise.wrap) {
 
 ### generator
 
+简述
+
+> 一种可以运行中暂停的函数
+
+要点
+
+- yield 和 next(..)进行双向消息传递
+- 多迭代器实现语句穿插(了解即可)
+- 迭代器 是一个明确定义的接口，用来逐个通过一系列从发生器得到的值
+- `for..of`循环为每一次迭代自动调用 next()——他不会给 next()传入任何值——而且他将会在收到一个`done:true`时自动终结
+- 异步地迭代 Generator
+- Generators + Promises
+  - 带有 Promise 的 Generator 运行器, （现在的 async，await）
+  - Generator 中的 Promise 并发，并行的发起异步，然后使用两个连续的 yield 语句等待并从 promise 中取得解析值
+  - 将 promise 逻辑作为实现细节隐藏起来
+- Generator 委托
+  - yield 委托`yield *`
+
+示例
+
+一个迭代器
+
+```js
+var something = (function() {
+  var nextVal
+
+  return {
+    // `for..of`循环需要这个
+    [Symbol.iterator]: function() {
+      return this
+    },
+
+    // 标准的迭代器接口方法
+    next: function() {
+      if (nextVal === undefined) {
+        nextVal = 1
+      } else {
+        nextVal = 3 * nextVal + 6
+      }
+
+      return { done: false, value: nextVal }
+    }
+  }
+})()
+
+something.next().value // 1
+something.next().value // 9
+something.next().value // 33
+something.next().value // 105
+```
+
+一个 generator 运行器
+
+```js
+function run(gen) {
+  var args = [].slice.call(arguments, 1),
+    it
+
+  // 在当前的上下文环境中初始化generator
+  it = gen.apply(this, args)
+
+  // 为generator的完成返回一个promise
+  return Promise.resolve().then(function handleNext(value) {
+    // 运行至下一个让出的值
+    var next = it.next(value)
+
+    return (function handleResult(next) {
+      // generator已经完成运行了？
+      if (next.done) {
+        return next.value
+      }
+      // 否则继续执行
+      else {
+        return Promise.resolve(next.value).then(
+          // 在成功的情况下继续异步循环，将解析的值送回generator
+          handleNext,
+
+          // 如果`value`是一个拒绝的promise，就将错误传播回generator自己的错误处理g
+          function handleErr(err) {
+            return Promise.resolve(it.throw(err)).then(handleResult)
+          }
+        )
+      }
+    })(next)
+  })
+}
+```
+
+yield 委托
+
+```js
+function* foo() {
+  console.log('`*foo()` starting')
+  yield 3
+  yield 4
+  console.log('`*foo()` finished')
+}
+
+function* bar() {
+  yield 1
+  yield 2
+  yield* foo() // `yield`-delegation!
+  yield 5
+}
+
+var it = bar()
+
+it.next().value // 1
+it.next().value // 2
+it.next().value // `*foo()` starting
+// 3
+it.next().value // 4
+it.next().value // `*foo()` finished
+// 5
+```
+
+递归委托
+
+```js
+function* foo(val) {
+  if (val > 1) {
+    // 递归委托
+    val = yield* foo(val - 1)
+  }
+
+  return yield request('http://some.url/?v=' + val)
+}
+
+function* bar() {
+  var r1 = yield* foo(3)
+  console.log(r1)
+}
+
+run(bar)
+```
+
 ### async
+
+简述
+
+> Generator 函数的语法糖
 
 ### 严格模式
 
