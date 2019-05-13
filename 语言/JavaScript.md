@@ -1113,7 +1113,7 @@ if (!Promise.wrap) {
   - CSP（Communicating Sequential Processes——通信顺序处理）
 - Thunks,将多参数函数替换成单参数的版本，且只接受回调函数作为参数
 - generator 可以为了异步而 yield Promise，也可以为异步而 yield thunk。我们需要的只是一个更聪明的 run(..)工具
-- generator兼容旧环境，[自动转译](https://facebook.github.io/regenerator/)
+- generator 兼容旧环境，[自动转译](https://facebook.github.io/regenerator/)
 
 示例
 
@@ -1579,6 +1579,7 @@ Symbol('bar') === Symbol('bar')
 程序性能
 
 要点
+
 - web worker，任务并行机制，启动分离的线程
   - 用处
     - 处理密集型的数学计算
@@ -1587,13 +1588,87 @@ Symbol('bar') === Symbol('bar')
     - 高流量网络通信
   - 数据传送
     - 结构化克隆算法
-    - Transferable对象
-  - SharedWorker，常用于socket链接
+    - Transferable 对象
+  - SharedWorker，常用于 socket 链接
 - SIMD，数据并行机制
-- asm.js 
+- asm.js
 - 基准分析，[工具](https://benchmarkjs.com/)
   - 测试真实的，有意义的代码段，并且在最接近实际能够期望的真实条件下进行
-  - 不必太过痴迷语法细节，如果不确定引擎真正执行的是什么以及做了什么优化，这种痴迷毫无根据（不要试图在聪明上战胜JS引擎，当来到性能优化的地方你可能会输给它）
-  - 不应当为了绕过某一种引擎难于处理的地方而改变一块代码（历史上的IE）
+  - 不必太过痴迷语法细节，如果不确定引擎真正执行的是什么以及做了什么优化，这种痴迷毫无根据（不要试图在聪明上战胜 JS 引擎，当来到性能优化的地方你可能会输给它）
+  - 不应当为了绕过某一种引擎难于处理的地方而改变一块代码（历史上的 IE）
   - “非关键路径的优化是万恶之源。”
 - 尾部调用优化 (TCO)，尾部调用的函数重复利用既存的栈帧。(对付递归很有用)
+
+### ES6
+
+要点
+
+- 块儿内部的函数声明被明确规定属于那个块儿的作用域
+- `...`称作 扩散（spread） 或 剩余（rest） 操作符,用于可迭代对象
+- 默认参数,简化对丢失的参数值(省略/undefined)进行默认值的赋值
+  - 默认值可以是任何合法的表达式，甚至是函数调用
+- 结构化解构
+  - 对象属性赋值模式(对象字面量是 target <-- source，而对象解构赋值是 source --> target)
+  - 解构是一种一般意义上的赋值操作，不仅是一种声明
+  - 重复赋值,允许源属性（持有任意值的类型）被罗列多次
+  - 带有对象或数组解构的赋值表达式的完成值是右手边完整的对象/数组值,因此可将解构赋值表达式链接在一起
+
+示例
+
+默认参数
+
+```js
+// z + 1默认值表达式抛出一个TDZ ReferenceError错误
+var w = 1,
+  z = 2
+
+function foo(x = w + 1, y = x + 1, z = z + 1) {
+  console.log(x, y, z)
+}
+
+foo() // ReferenceError
+```
+
+重复赋值
+
+```js
+var {
+  a: { x: X, x: Y },
+  a
+} = { a: { x: 1 } }
+
+X // 1
+Y // 1
+a // { x: 1 }
+;({
+  a: X,
+  a: Y,
+  a: [Z]
+} = { a: [1] })
+
+X.push(2)
+Y[0] = 10
+
+X // [10,2]
+Y // [10,2]
+Z // 1
+```
+
+解构赋值表达式链接在一起
+
+```js
+var o = { a: 1, b: 2, c: 3 },
+  p = [4, 5, 6],
+  a,
+  b,
+  c,
+  x,
+  y,
+  z
+
+;({ a } = { b, c } = o)
+;[x, y] = [z] = p
+
+console.log(a, b, c) // 1 2 3
+console.log(x, y, z) // 4 5 4
+```
