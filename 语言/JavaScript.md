@@ -1665,10 +1665,49 @@ var o = { a: 1, b: 2, c: 3 },
   x,
   y,
   z
-
 ;({ a } = { b, c } = o)
 ;[x, y] = [z] = p
 
 console.log(a, b, c) // 1 2 3
 console.log(x, y, z) // 4 5 4
+```
+
+参数默认值和解构默认值
+
+```js
+function f6({ x = 10 } = {}, { y } = { y: 10 }) {
+  console.log(x, y)
+}
+
+f6() // 10 10
+f6(undefined, undefined) // 10 10
+f6({}, undefined) // 10 10
+
+f6({}, {}) // 10 undefined
+f6(undefined, {}) // 10 undefined
+
+f6({ x: 2 }, { y: 3 }) // 2 3
+```
+
+嵌套默认值解构与重构
+
+```js
+// 将`defaults`混入`config`
+{
+  // 解构（使用默认值赋值）
+  let {
+    options: {
+      remove = defaults.options.remove,
+      enable = defaults.options.enable,
+      instance = defaults.options.instance
+    } = {},
+    log: { warn = defaults.log.warn, error = defaults.log.error } = {}
+  } = config
+
+  // 重构
+  config = {
+    options: { remove, enable, instance },
+    log: { warn, error }
+  }
+}
 ```
