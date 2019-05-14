@@ -5,3 +5,4 @@
 - [JavaScript Prototypes, a Pocket Reference](https://medium.com/@ajmeyghani/javascript-prototypes-a-pocket-reference-d88f550ffce3)
 - [MDN web docs](https://developer.mozilla.org/)
 - [ES6](http://es6.ruanyifeng.com/)
+- [CS-Interview-Knowledge-Map](https://github.com/InterviewMap/CS-Interview-Knowledge-Map)
