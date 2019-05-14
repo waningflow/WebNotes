@@ -1613,7 +1613,7 @@ Symbol('bar') === Symbol('bar')
   - 重复赋值,允许源属性（持有任意值的类型）被罗列多次
   - 带有对象或数组解构的赋值表达式的完成值是右手边完整的对象/数组值,因此可将解构赋值表达式链接在一起
 - 简约方法暗指匿名函数表达式
-- ```__proto__```标准化
+- `__proto__`标准化
 - 属性方法中允许`super.XXX`调用原型方法
 
 示例
@@ -1714,3 +1714,10 @@ f6({ x: 2 }, { y: 3 }) // 2 3
   }
 }
 ```
+
+### Event Loop
+
+- 任务队列，macrotasks，`setTimeout, setInterval, setImmediate, I/O, UI rendering`
+- 工作队列，microtasks, `process.nextTick, Promises, Object.observe(废弃), MutationObserver`
+- 事件循环每次只会入栈一个 macrotask ，主线程执行完该任务后又会先检查 microtasks 队列并完成里面的所有任务后再执行 macrotask
+- 浏览器的事件循环的进程模型，在每个 task 运行完以后，UI 都会重渲染
