@@ -1,4 +1,4 @@
-# Web Notes
+# 简介
 
 > Personal notes about web knowledge.
 > 

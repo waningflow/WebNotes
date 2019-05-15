@@ -1,8 +1,9 @@
+# JavaScript
 引用 YDKJS 一段话
 
 > JavaScript is awesome. It's easy to learn partially, and much harder to learn completely (or even sufficiently).
 
-### 类型
+## 类型
 
 要点
 
@@ -114,7 +115,7 @@ Number(b) // NaN
 parseInt(b) // 42
 ```
 
-### 变量
+## 变量
 
 要点
 
@@ -122,7 +123,7 @@ parseInt(b) // 42
 - 访问作用域内不存在的变量会报`ReferenceError`, 给未声明的变量赋值在非严格模式下会在全局作用域创建一个变量，而在严格模式下会报`ReferenceError`
 - let 声明的变量在一个 block(`{}`)内有效，在 block 内 let 声明之前称为`TDZ`(暂时性死区)，此时访问变量会报`ReferenceError`
 
-### 值
+## 值
 
 要点
 
@@ -228,7 +229,7 @@ foo(a)
 a // [1,2,3,4] 不是 [4,5,6,7]
 ```
 
-### 文法
+## 文法
 
 要点
 
@@ -371,7 +372,7 @@ console.log(foo())
 // Uncaught Exception: 42
 ```
 
-### 编译原理
+## 编译原理
 
 要点
 
@@ -384,7 +385,7 @@ console.log(foo())
   - RHS（Right-hand Side），赋值的源，如果 RHS look-up 在所有嵌套作用域中没有找到一个变量，则会抛出`ReferenceError`错误。如果对找到的变量做错误的操作，比如试图像函数一样执行一个`非函数`,则会抛出`TypeError`
 - 对于一个表达式`var a = 2`, JS 引擎看到的是两个表达式`var a`和`a = 2`, 前者在编译阶段将`a`加到作用域，后者在运行阶段执行
 
-### 对象
+## 对象
 
 要点
 
@@ -535,14 +536,14 @@ myObject.a // 3
 myObject.hasOwnProperty('a') // true
 ```
 
-### 函数
+## 函数
 
 要点
 
 - 所有命名参数都是 arguments 对象中对应索引的别名
 - 永远不要修改 arguments 对象，使用[].slice.call(arguments)复制 arguments 之后再修改
 
-### 作用域
+## 作用域
 
 简述
 
@@ -598,7 +599,7 @@ var a = 2
 bar()
 ```
 
-### 立即调用表达式
+## 立即调用表达式
 
 简述
 
@@ -625,7 +626,7 @@ var a = 2
 })
 ```
 
-### 闭包
+## 闭包
 
 简述
 
@@ -681,7 +682,7 @@ for (let i = 1; i <= 5; i++) {
 // 每隔一秒分别输出1，2，3，4，5
 ```
 
-### Polyfilling
+## Polyfilling
 
 简述
 
@@ -699,13 +700,13 @@ if (!Number.isNaN) {
 }
 ```
 
-### Transpiling
+## Transpiling
 
 简述
 
 > 转译，将新的语法转换为等效的旧代码以兼容旧的 JS 引擎, 常见转译器如[Babel](https://babeljs.io)
 
-### 箭头函数
+## 箭头函数
 
 简述
 
@@ -721,7 +722,7 @@ if (!Number.isNaN) {
   - 不能用作构造器，和 new 一起用会抛出错误
   - 没有 prototype 属性
 
-### 关于 this
+## 关于 this
 
 简述
 
@@ -849,7 +850,7 @@ if (!Function.prototype.softBind) {
 }
 ```
 
-### new 操作符
+## new 操作符
 
 要点
 
@@ -874,13 +875,13 @@ function new(func){
 }
 ```
 
-### call 函数
+## call 函数
 
-### apply 函数
+## apply 函数
 
-### bind 函数
+## bind 函数
 
-### 异步
+## 异步
 
 简述
 
@@ -897,7 +898,7 @@ function new(func){
 - “工作队列”是一个挂靠在事件轮询队列的每个 tick 末尾的队列
 - 语句排序,代码中表达语句的顺序没有必要与 JS 引擎执行它们的顺序相同
 
-### 回调
+## 回调
 
 简述
 
@@ -946,7 +947,7 @@ function asyncify(fn) {
 }
 ```
 
-### promise
+## promise
 
 简述
 
@@ -1090,7 +1091,7 @@ if (!Promise.wrap) {
 }
 ```
 
-### generator
+## generator
 
 简述
 
@@ -1288,15 +1289,15 @@ fooPromise.then(
 )
 ```
 
-### async
+## async
 
 简述
 
 > Generator 函数的语法糖
 
-### 严格模式
+## 严格模式
 
-### 原型
+## 原型
 
 简述
 
@@ -1479,7 +1480,7 @@ Object.defineProperty(Object.prototype, '__proto__', {
 })
 ```
 
-### Class
+## Class
 
 简述
 
@@ -1531,7 +1532,7 @@ Object.setPrototypeOf(E, D)
 E.foo() // "P.foo"
 ```
 
-### 行为委托
+## 行为委托
 
 简述
 
@@ -1545,7 +1546,7 @@ E.foo() // "P.foo"
 - “duck typing（鸭子类型）”（谚语：“如果它看起来像鸭子，叫起来像鸭子，那么它一定是一只鸭子”。）
   - 健壮性很差，例如，如果任何对象 恰好有一个 then() 方法，ES6 的 Promises 将会无条件地假设这个对象 是“thenable” 的，而且因此会期望它按照所有的 Promises 标准行为那样一致地动作
 
-### Symbol
+## Symbol
 
 简述
 
@@ -1599,7 +1600,7 @@ Symbol('bar') === Symbol('bar')
   - “非关键路径的优化是万恶之源。”
 - 尾部调用优化 (TCO)，尾部调用的函数重复利用既存的栈帧。(对付递归很有用)
 
-### ES6
+## ES6
 
 要点
 
@@ -1715,7 +1716,7 @@ f6({ x: 2 }, { y: 3 }) // 2 3
 }
 ```
 
-### Event Loop
+## Event Loop
 
 - 任务队列，macrotasks，`setTimeout, setInterval, setImmediate, I/O, UI rendering`
 - 工作队列，microtasks, `process.nextTick, Promises, Object.observe(废弃), MutationObserver`
