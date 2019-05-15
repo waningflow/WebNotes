@@ -10,6 +10,7 @@
   - 通过`vm.$set`方法向嵌套对象添加响应式属性
   - 通过`Object.assign()`创建一个新对象
 - 异步更新队列
+  - Vue 在更新 DOM 时是异步执行的。只要侦听到数据变化，Vue 将开启一个队列，并缓冲在同一事件循环中发生的所有数据变更。如果同一个 watcher 被多次触发，只会被推入到队列中一次。然后，在下一个的事件循环“tick”中，Vue 刷新队列并执行实际 (已去重的) 工作。
   - Vue 在内部对异步队列尝试使用原生的 Promise.then、MutationObserver 和 setImmediate，如果执行环境不支持，则会采用 setTimeout(fn, 0) 代替
 
 ### nextTick
@@ -20,5 +21,19 @@
 - 2.1.0 起新增：如果没有提供回调且在支持 Promise 的环境中，则返回一个 Promise
 
 ### 生命周期
+
+- 所有的生命周期钩子自动绑定 this 上下文到实例,不能使用箭头函数来定义一个生命周期方法
+- 生命周期钩子
+  - beforeCreate, 在实例初始化之后，数据观测 (data observer) 和 event/watcher 事件配置之前被调用
+  - created, 在实例创建完成后被立即调用。在这一步，实例已完成以下的配置：数据观测 (data observer)，属性和方法的运算，watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见
+  - beforeMount, 在挂载开始之前被调用：相关的 render 函数首次被调用
+  - mounted, el 被新创建的 vm.$el 替换，并挂载到实例上去之后调用 (mounted 不会承诺所有的子组件也都一起被挂载，如果希望等到整个视图都渲染完毕，可以用 vm.$nextTick)
+  - beforeUpdate，数据更新时调用，发生在虚拟 DOM 打补丁之前。这里适合在更新之前访问现有的 DOM，比如手动移除已添加的事件监听器
+  - updated，组件 DOM 已经更新（updated 不会承诺所有的子组件也都一起被重绘， 同样可以用 vm.$nextTick）
+  - activated，keep-alive 组件激活时调用
+  - deactivated，keep-alive 组件停用时调用
+  - beforeDestroy，实例销毁之前调用。在这一步，实例仍然完全可用
+  - destroyed，Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁
+  - errorCaptured，当捕获一个来自子孙组件的错误时被调用。此钩子会收到三个参数：错误对象、发生错误的组件实例以及一个包含错误来源信息的字符串。此钩子可以返回 false 以阻止该错误继续向上传播
 
 ### 异步组件
