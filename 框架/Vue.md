@@ -25,11 +25,11 @@
 - 所有的生命周期钩子自动绑定 this 上下文到实例,不能使用箭头函数来定义一个生命周期方法
 - 生命周期钩子
   - beforeCreate, 在实例初始化之后，数据观测 (data observer) 和 event/watcher 事件配置之前被调用
-  - created, 在实例创建完成后被立即调用。在这一步，实例已完成以下的配置：数据观测 (data observer)，属性和方法的运算，watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见
+  - created, 在实例创建完成后被立即调用。在这一步，实例已完成以下的配置：数据观测 (data observer)，属性和方法的运算，watch/event 事件回调。然而，挂载阶段还没开始，\$el 属性目前不可见
   - beforeMount, 在挂载开始之前被调用：相关的 render 函数首次被调用
   - mounted, el 被新创建的 vm.$el 替换，并挂载到实例上去之后调用 (mounted 不会承诺所有的子组件也都一起被挂载，如果希望等到整个视图都渲染完毕，可以用 vm.$nextTick)
   - beforeUpdate，数据更新时调用，发生在虚拟 DOM 打补丁之前。这里适合在更新之前访问现有的 DOM，比如手动移除已添加的事件监听器
-  - updated，组件 DOM 已经更新（updated 不会承诺所有的子组件也都一起被重绘， 同样可以用 vm.$nextTick）
+  - updated，组件 DOM 已经更新（updated 不会承诺所有的子组件也都一起被重绘， 同样可以用 vm.\$nextTick）
   - activated，keep-alive 组件激活时调用
   - deactivated，keep-alive 组件停用时调用
   - beforeDestroy，实例销毁之前调用。在这一步，实例仍然完全可用
@@ -37,3 +37,10 @@
   - errorCaptured，当捕获一个来自子孙组件的错误时被调用。此钩子会收到三个参数：错误对象、发生错误的组件实例以及一个包含错误来源信息的字符串。此钩子可以返回 false 以阻止该错误继续向上传播
 
 ### 异步组件
+
+### API
+
+要点
+
+- `Vue.use( plugin )`，安装 Vue.js 插件。如果插件是一个对象，必须提供 install 方法。如果插件是一个函数，它会被作为 install 方法。install 方法调用时，会将 Vue 作为参数传入。该方法需要在调用 new Vue() 之前被调用。当 install 方法被同一个插件多次调用，插件将只会被安装一次
+- `Vue.mixin( mixin )`，全局注册一个混入，影响注册之后所有创建的每个 Vue 实例。插件作者可以使用混入，向组件注入自定义的行为。
