@@ -32,8 +32,14 @@ let sidebarModules = titleConfig.map(v => {
 
 module.exports = {
   title: 'Web Notes',
-  description: 'web note from waningflow',
+  description: 'Web notes from waningflow',
   themeConfig: {
+    nav: [
+      {
+        text: 'Github',
+        link: 'https://github.com/waningflow/WebNotes'
+      }
+    ],
     sidebar: ['/', ...sidebarModules, '/Reference.md']
   }
 }
