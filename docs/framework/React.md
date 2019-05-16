@@ -70,6 +70,42 @@ class ExampleComponent extends React.Component {
 
 > 将数据传递到整个组件树而不用手动每层写一遍 props
 
-## Hook
+## 代码分割
 
-## 动态导入
+简述
+
+> 创建多个包并在运行时动态加载
+
+要点
+
+- 避免加载永远不需要的代码，并在初始加载的时候减少所需加载的代码量
+- 通过 import() 语法,当 Webpack 解析到该语法时，会自动地开始进行代码分割
+- React.lazy 接受一个函数，这个函数需要动态调用 import()。它必须返回一个 Promise，该 Promise 需要 resolve 一个 defalut export 的 React 组件
+- Suspense 组件置于懒加载组件之上,fallback 属性接受任何在组件加载过程中你想展示的 React 元素
+- 错误边界处理模块加载失败的情况
+- React.lazy 目前只支持默认导出。可以创建一个中间模块，来将命名模块重新导出为默认模块。这能保证 tree shaking 不会出错，并且不必引入不需要的组件
+
+示例
+
+基于路由的代码分割
+
+```js
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import React, { Suspense, lazy } from 'react'
+
+const Home = lazy(() => import('./routes/Home'))
+const About = lazy(() => import('./routes/About'))
+
+const App = () => (
+  <Router>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route path="/about" component={About} />
+      </Switch>
+    </Suspense>
+  </Router>
+)
+```
+
+## Hook
