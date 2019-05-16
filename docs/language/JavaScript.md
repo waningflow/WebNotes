@@ -878,9 +878,57 @@ function new(func){
 
 ## call 函数
 
+一个简单实现（用了 ES6）
+
+```js
+Function.prototype.call2 = function(cxt) {
+  let ctx = ctx || window
+  ctx.fun = this
+  let args = [...arguments].slice(1)
+  let result = ctx.fun(...args)
+  delete ctx.fun
+  return result
+}
+```
+
+一个简单实现（不用 ES6）
+
+```js
+Function.prototype.call2 = function(cxt) {
+  var ctx = ctx || window
+  ctx.fun = this
+  var args = []
+  for (var i = 1; i < arguments.length; i++) {
+    args.push('arguments[' + i + ']')
+  }
+  var result = eval('ctx.fun(' + args + ')')
+  delete ctx.fun
+  return result
+}
+```
+
 ## apply 函数
 
+_与 call 类似_
+
 ## bind 函数
+
+一个简单实现（用了 ES6）
+
+```js
+Function.prototype.bind2 = function() {
+  let self = this
+  let args = [...arguments].slice(1)
+  function Fun() {
+    return Fun.apply(
+      this instanceof Fun ? self : this,
+      args.concat(...arguments)
+    )
+  }
+  Fun.prototype = Object.create(self.prototype)
+  return Fun
+}
+```
 
 ## 异步
 
