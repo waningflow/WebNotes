@@ -1140,6 +1140,10 @@ if (!Promise.wrap) {
 }
 ```
 
+一个简单实现
+
+_TBD_
+
 ## generator
 
 简述
@@ -1337,6 +1341,10 @@ fooPromise.then(
   }
 )
 ```
+
+一个简单实现
+
+_TBD_
 
 ## async
 
@@ -1764,6 +1772,24 @@ f6({ x: 2 }, { y: 3 }) // 2 3
   }
 }
 ```
+
+## Proxy
+
+简述
+
+> 用于修改某些操作的默认行为，等同于在语言层面做出修改，属于一种“元编程
+
+要点
+
+- 在目标对象之前架设一层“拦截”，外界对该对象的访问，都必须先通过这层拦截，因此提供了一种机制，可以对外界的访问进行过滤和改写
+- `var proxy = new Proxy(target, handler);`用法区别在于 handler 的 不同
+
+## Reflect
+
+- 将 Object 对象的一些明显属于语言内部的方法（比如 Object.defineProperty），放到 Reflect 对象上
+- 修改某些 Object 方法的返回结果，让其变得更合理
+- 让 Object 操作都变成函数行为
+- Reflect 对象的方法与 Proxy 对象的方法一一对应，只要是 Proxy 对象的方法，就能在 Reflect 对象上找到对应的方法。这就让 Proxy 对象可以方便地调用对应的 Reflect 方法，完成默认行为，作为修改行为的基础
 
 ## Event Loop
 
