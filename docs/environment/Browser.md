@@ -1,3 +1,18 @@
 # 浏览器
 
-## getBoundingClientRect
+## 事件机制
+
+- 事件触发
+  - window 往事件触发处传播，遇到注册的捕获事件会触发
+  - 传播到事件触发处时触发注册的事件
+  - 从事件触发处往 window 传播，遇到注册的冒泡事件会触发
+- 如果给一个目标节点同时注册冒泡和捕获事件，事件触发会按照注册的顺序执行
+- 注册事件，`addEventListener`
+  - 第三个参数 useCapture 默认值为 false
+  - stopPropagation 是用来阻止事件冒泡或捕获
+  - stopImmediatePropagation 阻止事件，同时还能阻止该事件目标执行别的注册事件
+- 事件代理，子节点的事件注册在父节点上
+
+## 跨域
+
+
