@@ -1,6 +1,6 @@
 # Webpack
 
-## webpack loader
+## loader
 
 - 所有资源都是 JS，webpack 只支持 JS 模块，所有其他类型的模块，比如图片，css 等，都需要通过对应的 loader 转成 JS 模块
   - 对于 CSS，我们可以把它转成一段 JS，这个 JS 会把 CSS 插入到 DOM 中
@@ -8,6 +8,12 @@
 - 所有的 loader 都是一个管道, 进口是 一个字符串，然后经过加工，输出另一个字符串
   - 单一职责，每个 loader 只负责处理一个单一的任务
   - 通过组合不同的 loader 实现强大的功能
+
+##插件
+
+简述
+
+> 解决 loader 无法实现的其他事
 
 ## 代码分离
 

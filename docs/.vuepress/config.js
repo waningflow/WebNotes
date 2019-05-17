@@ -17,6 +17,10 @@ const titleConfig = [
   {
     id: 'support',
     name: '支撑'
+  },
+  {
+    id: 'data',
+    name: '数据'
   }
 ]
 
