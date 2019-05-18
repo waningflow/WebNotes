@@ -111,3 +111,22 @@ function knapsack(w, v, C) {
   return arr[l - 1][C]
 }
 ```
+
+最长递增子序列(在一组数字中，找出最长一串递增的数字)
+
+```js
+function lis(list) {
+  if (list.length === 0) {
+    return 0
+  }
+  let res = Array(list.length).fill(1)
+  for (let i = 1; i < list.length; i++) {
+    for (let j = 0; j < i; j++) {
+      if (list[j] < list[i] && res[j] + 1 > res[i]) {
+        res[i] = res[j] + 1
+      }
+    }
+  }
+  return Math.max(...res)
+}
+```
