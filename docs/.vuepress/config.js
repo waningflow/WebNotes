@@ -15,6 +15,10 @@ const titleConfig = [
     name: '环境'
   },
   {
+    id: 'comprehensive',
+    name: '综合'
+  },
+  {
     id: 'support',
     name: '支撑'
   },
