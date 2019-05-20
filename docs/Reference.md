@@ -11,4 +11,5 @@
 - [DP](https://www.zhihu.com/question/23995189)
 - [浏览器的回流与重绘 (Reflow & Repaint)](https://juejin.im/post/5a9923e9518825558251c96a)
 - [Hybrid App 技术解析 -- 原理篇](https://segmentfault.com/a/1190000015678155)
-- [Redux](https://www.redux.org.cn/)
+- [Redux 文档](https://www.redux.org.cn/)
+- [Redux 实现](https://github.com/brickspert/blog/issues/22)
