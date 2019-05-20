@@ -13,3 +13,4 @@
 - [Hybrid App 技术解析 -- 原理篇](https://segmentfault.com/a/1190000015678155)
 - [Redux 文档](https://www.redux.org.cn/)
 - [Redux 实现](https://github.com/brickspert/blog/issues/22)
+- [网络模型](https://juejin.im/post/59a0472f5188251240632f92)
