@@ -15,6 +15,96 @@
   - Vue 在更新 DOM 时是异步执行的。只要侦听到数据变化，Vue 将开启一个队列，并缓冲在同一事件循环中发生的所有数据变更。如果同一个 watcher 被多次触发，只会被推入到队列中一次。然后，在下一个的事件循环“tick”中，Vue 刷新队列并执行实际 (已去重的) 工作。
   - Vue 在内部对异步队列尝试使用原生的 Promise.then、MutationObserver 和 setImmediate，如果执行环境不支持，则会采用 setTimeout(fn, 0) 代替
 
+示例
+
+响应式的简单实现
+
+```js
+let data = {
+  name: 'xxx',
+  info: {
+    age: 22,
+    hobbies: ['one', 'two']
+  }
+}
+
+let target = null
+
+function defineReactive(obj, key, val) {
+  if (typeof val === 'object') {
+    observe(val)
+  }
+  let dep = new Dep()
+  Object.defineProperty(obj, key, {
+    enummable: true,
+    configurable: true,
+    get() {
+      console.log('get')
+      console.log(val)
+      if (target) {
+        dep.addSubs(target)
+      }
+      return val
+    },
+    set(nVal) {
+      console.log('set')
+      console.log(nVal)
+      val = nVal
+      dep.notify()
+    }
+  })
+}
+
+function observe(obj) {
+  if (typeof obj !== 'object') {
+    return
+  }
+  for (let [key, value] of Object.entries(obj)) {
+    defineReactive(obj, key, value)
+  }
+}
+
+class Dep {
+  constructor() {
+    this.subs = []
+  }
+
+  addSubs(sub) {
+    this.subs.push(sub)
+  }
+
+  notify() {
+    this.subs.forEach(sub => {
+      sub.update()
+    })
+  }
+}
+
+class Watcher {
+  constructor(obj, key, cb) {
+    target = this
+    this.obj = obj
+    this.key = key
+    this.cb = cb
+    this.value = obj[key]
+    target = null
+  }
+
+  update() {
+    this.cb()
+  }
+}
+
+observe(data)
+
+new Watcher(data, 'name', val => {
+  console.log('name update: ' + data.name)
+})
+
+data.name = 'yyy'
+data.name = 'yyy1'
+```
+
 ## nextTick
 
 要点

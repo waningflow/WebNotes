@@ -42,4 +42,4 @@ const logger = store => next => action => {
 - combineReducers 函数,多 reducer 合并成一个 reducer
 - createStore 函数，创建 store 对象，包含 getState, dispatch, subscribe, replaceReducer
 - applyMiddleware 函数，重写 createStore，扩展 dispatch 函数
-- compose 函数，实现多个函数嵌套调用
+- compose 函数，实现多个函数嵌套调用(接收参数与返回值“相同”的函数，这里接收参数与返回值都是一个 dispatch 函数)
