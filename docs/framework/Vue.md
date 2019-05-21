@@ -138,7 +138,28 @@ data.name = 'yyy1'
 
 - 为什么 v-for 的 key 最好不要用 index，（key 相同的节点会复用，[链接](https://stackoverflow.com/questions/44531510/why-not-always-use-the-index-as-the-key-in-a-vue-js-for-loop)）
 
+## 插槽
+
+- 父级模板里的所有内容都是在父级作用域中编译的；子模板里的所有内容都是在子作用域中编译的
+
 ## 异步组件
+
+- 在大型应用中，我们可能需要将应用分割成小一些的代码块，并且只在需要的时候才从服务器加载一个模块。为了简化，Vue 允许你以一个工厂函数的方式定义你的组件，这个工厂函数会异步解析你的组件定义。Vue 只有在这个组件需要被渲染的时候才会触发该工厂函数，且会把结果缓存起来供未来重渲染
+
+示例
+
+配合 webpack 和 ES6 语法
+
+```js
+new Vue({
+  // ...
+  components: {
+    'my-component': () => import('./my-async-component')
+  }
+})
+```
+
+## 边界情况
 
 ## API
 
