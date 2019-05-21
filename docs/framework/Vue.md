@@ -128,6 +128,16 @@ data.name = 'yyy1'
   - destroyed，Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁
   - errorCaptured，当捕获一个来自子孙组件的错误时被调用。此钩子会收到三个参数：错误对象、发生错误的组件实例以及一个包含错误来源信息的字符串。此钩子可以返回 false 以阻止该错误继续向上传播
 
+## 原理
+
+- 初始化 Vue 到最终渲染
+  - new Vue -> init -> \$mount [-> complie] -> render -> vnode -> patch -> DOM
+- 组件化
+
+## virtual dom
+
+- 为什么 v-for 的 key 最好不要用 index，（key 相同的节点会复用，[链接](https://stackoverflow.com/questions/44531510/why-not-always-use-the-index-as-the-key-in-a-vue-js-for-loop)）
+
 ## 异步组件
 
 ## API
