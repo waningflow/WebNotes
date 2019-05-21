@@ -916,12 +916,12 @@ _与 call 类似_
 一个简单实现（用了 ES6）
 
 ```js
-Function.prototype.bind2 = function() {
+Function.prototype.bind2 = function(context) {
   let self = this
   let args = [...arguments].slice(1)
   function Fun() {
-    return Fun.apply(
-      this instanceof Fun ? self : this,
+    return self.apply(
+      this instanceof Fun ? this : context,
       args.concat(...arguments)
     )
   }
