@@ -6,8 +6,6 @@ key 用于 virtual dom 的 diff 算法,具备相同的 key 被认为是同一个
 
 ## 2. `['1', '2', '3'].map(parseInt)`结果
 
-['1', '2', '3'].map(parseInt)
-
 ```js
 ;['1', '2', '3'].map((v, i) => parseInt(v, i))
 parseInt('1', 0) //1

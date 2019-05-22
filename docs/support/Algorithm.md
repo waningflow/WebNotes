@@ -53,6 +53,32 @@ function sort(arr) {
 }
 ```
 
+## 快速排序
+
+随机选一个数，比该数小的放左边，大的放右边，两侧递归。复杂度 O(LogN)
+
+```js
+function sort(arr) {
+  if (arr.length <= 1) {
+    return arr.slice()
+  }
+  let baseIndex = Math.floor(arr.length * Math.random())
+  let left = [],
+    right = []
+  for (let i = 0; i < arr.length; i++) {
+    if (i === baseIndex) {
+      continue
+    }
+    if (arr[i] < arr[baseIndex]) {
+      left.push(arr[i])
+    } else {
+      right.push(arr[i])
+    }
+  }
+  return [...sort(left), arr[baseIndex], ...sort(right)]
+}
+```
+
 ## 动态规划（DP）
 
 简述
