@@ -39,7 +39,7 @@ let sidebarModules = titleConfig.map(v => {
 })
 
 module.exports = {
-  title: 'Web Notes',
+  title: 'waningflow的小本本',
   description: 'Web notes from waningflow',
   themeConfig: {
     nav: [
