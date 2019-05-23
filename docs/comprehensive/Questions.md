@@ -1,10 +1,10 @@
 # 题目
 
-## 1. react 和 vue 的列表组件中 key 的作用
+## react 和 vue 的列表组件中 key 的作用
 
 key 用于 virtual dom 的 diff 算法,具备相同的 key 被认为是同一个节点，直接更新，可以提升 diff 的效率
 
-## 2. `['1', '2', '3'].map(parseInt)`结果
+## `['1', '2', '3'].map(parseInt)`结果
 
 ```js
 ;['1', '2', '3'].map((v, i) => parseInt(v, i))
@@ -13,7 +13,7 @@ parseInt('2', 1) //NaN
 parseInt('3', 1) //NaN
 ```
 
-## 3. 防抖和节流的区别以及实现
+## 防抖和节流的区别以及实现
 
 ```js
 function debunce(fun, t = 10) {
@@ -40,12 +40,12 @@ function throttle(fun, t = 10) {
 }
 ```
 
-## 4. Set、Map、WeakSet 和 WeakMap 的区别
+## Set、Map、WeakSet 和 WeakMap 的区别
 
 - WeakSet 的成员只能是对象，且都是弱引用，不计入垃圾回收机制。不可遍历
 - WeakMap 只接受对象作为键名（null 除外），且键名所指向的对象，不计入垃圾回收机制。不可遍历
 
-## 5. 深度优先遍历和广度优先遍历实现
+## 深度优先遍历和广度优先遍历实现
 
 ```js
 let tree = [
@@ -230,4 +230,27 @@ console.log('script end')
 // async1 end
 // promise2
 // setTimeout
+```
+
+## 数组扁平化
+
+编写一个程序将数组扁平化去并除其中重复部分数据，最终得到一个升序且不重复的数组
+
+```js
+var arr = [[1, 2, 2], [3, 4, 5, 5], [6, 7, 8, 9, [11, 12, [12, 13, [14]]]], 10]
+
+function flatArr(arr) {
+  return arr.reduce(
+    (pre, cur) => pre.concat(Array.isArray(cur) ? flatArr(cur) : cur),
+    []
+  )
+}
+
+let res = [...new Set(flatArr(arr))].sort((a, b) => a - b)
+
+console.log(res)
+// [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ]
+
+// 其他方法
+let res1 = [...new Set(arr.flat(Infinity))].sort((a, b) => a - b)
 ```
