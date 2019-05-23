@@ -42,6 +42,9 @@ function throttle(fun, t = 10) {
 
 ## 4. Set、Map、WeakSet 和 WeakMap 的区别
 
+WeakSet 的成员只能是对象，且都是弱引用，不计入垃圾回收机制。不可遍历
+WeakMap 只接受对象作为键名（null 除外），且键名所指向的对象，不计入垃圾回收机制。不可遍历
+
 ## 5. 深度优先遍历和广度优先遍历实现
 
 ```js
@@ -109,4 +112,79 @@ function breadSearch(list) {
 }
 console.log('breadSearch:' + breadSearch(tree))
 // breadSearch:p1,p11,p12,p111,p112,p121,p122,p1211
+```
+
+## 深拷贝实现
+
+```js
+// 简单递归实现，不考虑循环引用，正则，Symbol等
+function deepcopy(obj) {
+  if (!obj) {
+    return obj
+  }
+  let item
+  if (typeof obj === 'object') {
+    if (Array.isArray(obj)) {
+      item = obj.map(v => deepcopy(v))
+    } else {
+      item = {}
+      Object.keys(obj).forEach(k => {
+        item[k] = deepcopy(obj[k])
+      })
+    }
+  } else {
+    item = obj
+  }
+  return item
+}
+
+// DFS或BFS实现，考虑循环引用，不考虑正则，Symbol等
+function copy(obj) {
+  let rtn = {
+    k: undefined
+  }
+  let stack = [
+    {
+      des: rtn,
+      key: 'k',
+      src: obj
+    }
+  ]
+  let hash = new Map()
+  while (stack.length) {
+    console.log(rtn)
+    let node = stack.pop()
+    let { des, key, src } = node
+
+    if (!src || typeof src !== 'object') {
+      des[key] = src
+      continue
+    }
+    if (hash.has(src)) {
+      des[key] = hash.get(src)
+      continue
+    }
+    if (Array.isArray(node.src)) {
+      des[key] = []
+      src.forEach((v, i) => {
+        stack.push({
+          des: des[key],
+          key: i,
+          src: v
+        })
+      })
+    } else {
+      des[key] = {}
+      Object.keys(src).forEach(k => {
+        stack.push({
+          des: des[key],
+          key: k,
+          src: src[k]
+        })
+      })
+    }
+    hash.set(src, des[key])
+  }
+  return rtn.k
+}
 ```
