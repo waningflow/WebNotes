@@ -42,8 +42,8 @@ function throttle(fun, t = 10) {
 
 ## 4. Set、Map、WeakSet 和 WeakMap 的区别
 
-WeakSet 的成员只能是对象，且都是弱引用，不计入垃圾回收机制。不可遍历
-WeakMap 只接受对象作为键名（null 除外），且键名所指向的对象，不计入垃圾回收机制。不可遍历
+- WeakSet 的成员只能是对象，且都是弱引用，不计入垃圾回收机制。不可遍历
+- WeakMap 只接受对象作为键名（null 除外），且键名所指向的对象，不计入垃圾回收机制。不可遍历
 
 ## 5. 深度优先遍历和广度优先遍历实现
 
@@ -187,4 +187,47 @@ function copy(obj) {
   }
   return rtn.k
 }
+```
+
+## ES5/ES6 的继承除了写法以外还有什么区别
+
+- class 有 TDZ
+- class 内部会启用严格模式
+- class 所有方法（包括静态方法和实例方法）都是不可枚举的
+- class 的所有方法（包括静态方法和实例方法）都没有 prototype 属性，不能使用 new 来调用
+- 必须使用 new 调用 class
+- class 内部无法重写类名
+
+## 异步执行顺序问题
+
+```js
+async function async1() {
+  console.log('async1 start')
+  await async2()
+  console.log('async1 end')
+}
+async function async2() {
+  console.log('async2')
+}
+console.log('script start')
+setTimeout(function() {
+  console.log('setTimeout')
+}, 0)
+async1()
+new Promise(function(resolve) {
+  console.log('promise1')
+  resolve()
+}).then(function() {
+  console.log('promise2')
+})
+console.log('script end')
+
+// script start
+// async1 start
+// async2
+// promise1
+// script end
+// async1 end
+// promise2
+// setTimeout
 ```
