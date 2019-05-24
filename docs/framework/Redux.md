@@ -43,3 +43,116 @@ const logger = store => next => action => {
 - createStore 函数，创建 store 对象，包含 getState, dispatch, subscribe, replaceReducer
 - applyMiddleware 函数，重写 createStore，扩展 dispatch 函数
 - compose 函数，实现多个函数嵌套调用(接收参数与返回值“相同”的函数，这里接收参数与返回值都是一个 dispatch 函数)
+
+## 简单实现
+
+```js
+function creatStore(reducer, rewriteCreateStore) {
+  let state = {}
+  let listeners = []
+
+  if (typeof rewriteCreateStore === 'function') {
+    return rewriteCreateStore(creatStore)(reducer)
+  }
+
+  function subscribe(ber) {
+    listeners.push(ber)
+  }
+
+  function getState() {
+    return state
+  }
+
+  function dispatch(action) {
+    state = reducer(state, action)
+    listeners.forEach(ber => ber(state))
+  }
+
+  dispatch({
+    type: Symbol('FALSE_ACTION')
+  })
+
+  return {
+    getState: getState,
+    dispatch: dispatch,
+    subscribe: subscribe
+  }
+}
+
+function combineReducer(reducers) {
+  let keys = Object.keys(reducers)
+  return function(state, action) {
+    let newState = {}
+    keys.forEach((k, i) => {
+      newState[k] = reducers[k](state[k], action)
+    })
+    return newState
+  }
+}
+
+function applyMiddleware(middlewares) {
+  return creatStore => reducer => {
+    let store = creatStore(reducer)
+    middlewares = middlewares.slice()
+    middlewares.reverse()
+
+    let dispatch = store.dispatch
+    middlewares.forEach(middleware => {
+      dispatch = middleware(store)(dispatch)
+    })
+
+    return Object.assign({}, store, { dispatch })
+  }
+}
+
+const logger = store => next => action => {
+  console.log('dispatching', action)
+  let result = next(action)
+  console.log('next state', store.getState())
+  return result
+}
+
+function dateReducer(state = '', action) {
+  if (!action) {
+    return state
+  }
+  switch (action.type) {
+    case 'UPDATE_DATE':
+      return action.value
+    default:
+      return state
+  }
+}
+
+function timeReducer(state = '', action) {
+  if (!action) {
+    return state
+  }
+  switch (action.type) {
+    case 'UPDATE_TIME':
+      return action.value
+    default:
+      return state
+  }
+}
+
+let reducers = combineReducer({
+  date: dateReducer,
+  time: timeReducer
+})
+
+let store = creatStore(reducers, applyMiddleware([logger]))
+
+store.subscribe(() => {
+  console.log(store.getState())
+})
+
+store.dispatch({
+  type: 'UPDATE_DATE',
+  value: new Date()
+})
+store.dispatch({
+  type: 'UPDATE_TIME',
+  value: new Date().getTime()
+})
+```
