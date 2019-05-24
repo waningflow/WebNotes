@@ -1142,7 +1142,183 @@ if (!Promise.wrap) {
 
 一个简单实现
 
-_TBD_
+```js
+function Promise(fun) {
+  let self = this
+  self.status = 'pending'
+  self.data = undefined
+  self.onResolveCB = []
+  self.onRejectCB = []
+
+  function resolve(value) {
+    setTimeout(() => {
+      if (value instanceof Promise) {
+        return value.then(resolve, reject)
+      }
+      if (self.status === 'pending') {
+        self.status = 'resolved'
+        self.data = value
+        for (let i = 0; i < self.onResolveCB.length; i++) {
+          self.onResolveCB[i](value)
+        }
+      }
+    })
+  }
+
+  function reject(value) {
+    setTimeout(() => {
+      if (self.status === 'pending') {
+        self.status = 'rejected'
+        self.data = value
+        for (let i = 0; i < self.onRejectCB.length; i++) {
+          self.onRejectCB[i](value)
+        }
+      }
+    })
+  }
+
+  try {
+    fun(resolve, reject)
+  } catch (e) {
+    reject(e)
+  }
+}
+
+Promise.prototype.then = function(onResolved, onRejected) {
+  let self = this
+  let p2
+  onResolved = typeof onResolved === 'function' ? onResolved : v => v
+  onRejected =
+    typeof onRejected === 'function'
+      ? onRejected
+      : v => {
+          throw v
+        }
+
+  if (self.status === 'resolved') {
+    return (p2 = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          let x = onResolved(self.data)
+          resolvePromise(p2, x, resolve, reject)
+        } catch (e) {
+          reject(e)
+        }
+      })
+    }))
+  }
+
+  if (self.status === 'rejected') {
+    return (p2 = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          let x = onRejected(self.data)
+          resolvePromise(p2, x, resolve, reject)
+        } catch (e) {
+          reject(e)
+        }
+      })
+    }))
+  }
+
+  if (self.status === 'pending') {
+    return (p2 = new Promise((resolve, reject) => {
+      self.onResolveCB.push(() => {
+        try {
+          let x = onResolved(self.data)
+          resolvePromise(p2, x, resolve, reject)
+        } catch (e) {
+          reject(e)
+        }
+      })
+      self.onRejectCB.push(() => {
+        try {
+          let x = onRejected(self.data)
+          resolvePromise(p2, x, resolve, reject)
+        } catch (e) {
+          reject(e)
+        }
+      })
+    }))
+  }
+}
+
+function resolvePromise(promise2, x, resolve, reject) {
+  var then
+  var thenCalledOrThrow = false
+
+  if (promise2 === x) {
+    // 对应标准2.3.1节
+    return reject(new TypeError('Chaining cycle detected for promise!'))
+  }
+
+  if (x instanceof Promise) {
+    // 对应标准2.3.2节
+    // 如果x的状态还没有确定，那么它是有可能被一个thenable决定最终状态和值的
+    // 所以这里需要做一下处理，而不能一概的以为它会被一个“正常”的值resolve
+    if (x.status === 'pending') {
+      x.then(function(value) {
+        resolvePromise(promise2, value, resolve, reject)
+      }, reject)
+    } else {
+      // 但如果这个Promise的状态已经确定了，那么它肯定有一个“正常”的值，而不是一个thenable，所以这里直接取它的状态
+      x.then(resolve, reject)
+    }
+    return
+  }
+
+  if (x !== null && (typeof x === 'object' || typeof x === 'function')) {
+    // 2.3.3
+    try {
+      // 2.3.3.1 因为x.then有可能是一个getter，这种情况下多次读取就有可能产生副作用
+      // 即要判断它的类型，又要调用它，这就是两次读取
+      then = x.then
+      if (typeof then === 'function') {
+        // 2.3.3.3
+        then.call(
+          x,
+          function rs(y) {
+            // 2.3.3.3.1
+            if (thenCalledOrThrow) return // 2.3.3.3.3 即这三处谁选执行就以谁的结果为准
+            thenCalledOrThrow = true
+            return resolvePromise(promise2, y, resolve, reject) // 2.3.3.3.1
+          },
+          function rj(r) {
+            // 2.3.3.3.2
+            if (thenCalledOrThrow) return // 2.3.3.3.3 即这三处谁选执行就以谁的结果为准
+            thenCalledOrThrow = true
+            return reject(r)
+          }
+        )
+      } else {
+        // 2.3.3.4
+        resolve(x)
+      }
+    } catch (e) {
+      // 2.3.3.2
+      if (thenCalledOrThrow) return // 2.3.3.3.3 即这三处谁选执行就以谁的结果为准
+      thenCalledOrThrow = true
+      return reject(e)
+    }
+  } else {
+    // 2.3.4
+    resolve(x)
+  }
+}
+
+Promise.deferred = Promise.defer = function() {
+  var dfd = {}
+  dfd.promise = new Promise(function(resolve, reject) {
+    dfd.resolve = resolve
+    dfd.reject = reject
+  })
+  return dfd
+}
+
+try {
+  module.exports = Promise
+} catch (e) {}
+```
 
 ## generator
 
