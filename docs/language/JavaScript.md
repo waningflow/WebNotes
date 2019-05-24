@@ -1140,7 +1140,7 @@ if (!Promise.wrap) {
 }
 ```
 
-一个简单实现
+一个简单实现(测试工具：[promises-aplus-tests](https://www.npmjs.com/package/promises-aplus-tests))
 
 ```js
 function Promise(fun) {
