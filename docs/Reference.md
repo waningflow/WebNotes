@@ -17,3 +17,4 @@
 - [前端工程-基础篇](https://github.com/fouber/blog/issues/10)
 - [白话中台战略](https://insights.thoughtworks.cn/what-is-zhongtai/)
 - [Promise 实现](https://github.com/xieranmaya/blog/issues/3)
+- [状态管理库对比](https://zhuanlan.zhihu.com/p/53599723)
