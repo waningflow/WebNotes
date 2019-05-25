@@ -28,6 +28,8 @@
 
 ## 构造器模式
 
+- 基于类
+
 ```js
 // traditional Function-based syntax
 function Hero(name, specialAbility) {
@@ -62,3 +64,170 @@ console.log(IronMan.getDetails()) // Iron Man can fly
 ```
 
 ## 工厂模式
+
+- 基于类
+
+```js
+class BallFactory {
+  constructor() {
+    this.createBall = function(type) {
+      let ball
+      if (type === 'football' || type === 'soccer') ball = new Football()
+      else if (type === 'basketball') ball = new Basketball()
+      ball.roll = function() {
+        return `The ${this._type} is rolling.`
+      }
+
+      return ball
+    }
+  }
+}
+
+class Football {
+  constructor() {
+    this._type = 'football'
+    this.kick = function() {
+      return 'You kicked the football.'
+    }
+  }
+}
+
+class Basketball {
+  constructor() {
+    this._type = 'basketball'
+    this.bounce = function() {
+      return 'You bounced the basketball.'
+    }
+  }
+}
+
+// creating objects
+const factory = new BallFactory()
+
+const myFootball = factory.createBall('football')
+const myBasketball = factory.createBall('basketball')
+
+console.log(myFootball.roll()) // The football is rolling.
+console.log(myBasketball.roll()) // The basketball is rolling.
+console.log(myFootball.kick()) // You kicked the football.
+console.log(myBasketball.bounce()) // You bounced the basketball.
+```
+
+## 原型模式
+
+- 基于对象
+
+```js
+// using Object.create as was recommended by ES5 standard
+const car = {
+  noOfWheels: 4,
+  start() {
+    return 'started'
+  },
+  stop() {
+    return 'stopped'
+  }
+}
+
+// Object.create(proto[, propertiesObject])
+
+const myCar = Object.create(car, { owner: { value: 'John' } })
+
+console.log(myCar.__proto__ === car) // true
+```
+
+## 单例模式
+
+- 一个类只存在一个实例
+
+```js
+class Database {
+  constructor(data) {
+    if (Database.exists) {
+      return Database.instance
+    }
+    this._data = data
+    Database.instance = this
+    Database.exists = true
+    return this
+  }
+
+  getData() {
+    return this._data
+  }
+
+  setData(data) {
+    this._data = data
+  }
+}
+
+// usage
+const mongo = new Database('mongo')
+console.log(mongo.getData()) // mongo
+
+const mysql = new Database('mysql')
+console.log(mysql.getData()) // mongo
+```
+
+## 适配器模式
+
+- 新老接口适配
+
+```js
+// old interface
+class OldCalculator {
+  constructor() {
+    this.operations = function(term1, term2, operation) {
+      switch (operation) {
+        case 'add':
+          return term1 + term2
+        case 'sub':
+          return term1 - term2
+        default:
+          return NaN
+      }
+    }
+  }
+}
+
+// new interface
+class NewCalculator {
+  constructor() {
+    this.add = function(term1, term2) {
+      return term1 + term2
+    }
+    this.sub = function(term1, term2) {
+      return term1 - term2
+    }
+  }
+}
+
+// Adapter Class
+class CalcAdapter {
+  constructor() {
+    const newCalc = new NewCalculator()
+
+    this.operations = function(term1, term2, operation) {
+      switch (operation) {
+        case 'add':
+          // using the new implementation under the hood
+          return newCalc.add(term1, term2)
+        case 'sub':
+          return newCalc.sub(term1, term2)
+        default:
+          return NaN
+      }
+    }
+  }
+}
+
+// usage
+const oldCalc = new OldCalculator()
+console.log(oldCalc.operations(10, 5, 'add')) // 15
+
+const newCalc = new NewCalculator()
+console.log(newCalc.add(10, 5)) // 15
+
+const adaptedCalc = new CalcAdapter()
+console.log(adaptedCalc.operations(10, 5, 'add')) // 15;
+```
