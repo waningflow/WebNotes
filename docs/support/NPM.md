@@ -1,5 +1,13 @@
 # NPM
 
+## npm install
+
+- 安装过程
+  - 发出 npm install 命令
+  - npm 向 registry 查询模块压缩包的网址
+  - 下载压缩包，存放在~/.npm 目录
+  - 解压压缩包到当前项目的 node_modules 目录
+
 ## npm link
 
 要点
