@@ -580,3 +580,183 @@ sub.fire('INC')
 console.log(obs1.state) // 2
 console.log(obs2.state) // 20
 ```
+
+## 状态模式
+
+- 行为是基于状态改变
+
+```js
+class TrafficLight {
+  constructor() {
+    this.states = [new GreenLight(), new RedLight(), new YellowLight()]
+    this.current = this.states[0]
+  }
+
+  change() {
+    const totalStates = this.states.length
+    let currentIndex = this.states.findIndex(light => light === this.current)
+    if (currentIndex + 1 < totalStates)
+      this.current = this.states[currentIndex + 1]
+    else this.current = this.states[0]
+  }
+
+  sign() {
+    return this.current.sign()
+  }
+}
+
+class Light {
+  constructor(light) {
+    this.light = light
+  }
+}
+
+class RedLight extends Light {
+  constructor() {
+    super('red')
+  }
+
+  sign() {
+    return 'STOP'
+  }
+}
+
+class YellowLight extends Light {
+  constructor() {
+    super('yellow')
+  }
+
+  sign() {
+    return 'STEADY'
+  }
+}
+
+class GreenLight extends Light {
+  constructor() {
+    super('green')
+  }
+
+  sign() {
+    return 'GO'
+  }
+}
+
+// usage
+const trafficLight = new TrafficLight()
+
+console.log(trafficLight.sign()) // 'GO'
+trafficLight.change()
+
+console.log(trafficLight.sign()) // 'STOP'
+trafficLight.change()
+
+console.log(trafficLight.sign()) // 'STEADY'
+trafficLight.change()
+
+console.log(trafficLight.sign()) // 'GO'
+trafficLight.change()
+
+console.log(trafficLight.sign()) // 'STOP'
+```
+
+## 策略模式
+
+- 行为或算法可以在运行时更改
+- 定义一系列的算法,把它们一个个封装起来, 并且使它们可相互替换
+
+```js
+// encapsulation
+class Commute {
+  travel(transport) {
+    return transport.travelTime()
+  }
+}
+
+class Vehicle {
+  travelTime() {
+    return this._timeTaken
+  }
+}
+
+// strategy 1
+class Bus extends Vehicle {
+  constructor() {
+    super()
+    this._timeTaken = 10
+  }
+}
+
+// strategy 2
+class Taxi extends Vehicle {
+  constructor() {
+    super()
+    this._timeTaken = 5
+  }
+}
+
+// strategy 3
+class PersonalCar extends Vehicle {
+  constructor() {
+    super()
+    this._timeTaken = 3
+  }
+}
+
+// usage
+const commute = new Commute()
+
+console.log(commute.travel(new Taxi())) // 5
+console.log(commute.travel(new Bus())) // 10
+```
+
+## 模板模式
+
+```js
+class Employee {
+  constructor(name, salary) {
+    this._name = name
+    this._salary = salary
+  }
+
+  work() {
+    return `${this._name} handles ${
+      this.responsibilities() /* gap to be filled by subclass */
+    }`
+  }
+
+  getPaid() {
+    return `${this._name} got paid ${this._salary}`
+  }
+}
+
+class Developer extends Employee {
+  constructor(name, salary) {
+    super(name, salary)
+  }
+
+  // details handled by subclass
+  responsibilities() {
+    return 'application development'
+  }
+}
+
+class Tester extends Employee {
+  constructor(name, salary) {
+    super(name, salary)
+  }
+
+  // details handled by subclass
+  responsibilities() {
+    return 'testing'
+  }
+}
+
+// usage
+const dev = new Developer('Nathan', 100000)
+console.log(dev.getPaid()) // 'Nathan got paid 100000'
+console.log(dev.work()) // 'Nathan handles application development'
+
+const tester = new Tester('Brian', 90000)
+console.log(tester.getPaid()) // 'Brian got paid 90000'
+console.log(tester.work()) // 'Brian handles testing'
+```
