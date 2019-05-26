@@ -428,3 +428,155 @@ x.execute('cube')
 
 console.log(x.commandsExecuted) // ['square', 'cube']
 ```
+
+## 迭代器模式
+
+- 顺序访问集合对象的元素，不需要知道集合对象的底层表示
+
+```js
+// using Iterator
+class IteratorClass {
+  constructor(data) {
+    this.index = 0
+    this.data = data
+  }
+
+  [Symbol.iterator]() {
+    return {
+      next: () => {
+        if (this.index < this.data.length) {
+          return { value: this.data[this.index++], done: false }
+        } else {
+          this.index = 0 // to reset iteration status
+          return { done: true }
+        }
+      }
+    }
+  }
+}
+
+// using Generator
+function* iteratorUsingGenerator(collection) {
+  var nextIndex = 0
+
+  while (nextIndex < collection.length) {
+    yield collection[nextIndex++]
+  }
+}
+
+// usage
+const gen = iteratorUsingGenerator(['Hi', 'Hello', 'Bye'])
+
+console.log(gen.next().value) // 'Hi'
+console.log(gen.next().value) // 'Hello'
+console.log(gen.next().value) // 'Bye'
+```
+
+## 中介模式
+
+```js
+class TrafficTower {
+  constructor() {
+    this._airplanes = []
+  }
+
+  register(airplane) {
+    this._airplanes.push(airplane)
+    airplane.register(this)
+  }
+
+  requestCoordinates(airplane) {
+    return this._airplanes
+      .filter(plane => airplane !== plane)
+      .map(plane => plane.coordinates)
+  }
+}
+
+class Airplane {
+  constructor(coordinates) {
+    this.coordinates = coordinates
+    this.trafficTower = null
+  }
+
+  register(trafficTower) {
+    this.trafficTower = trafficTower
+  }
+
+  requestCoordinates() {
+    if (this.trafficTower) return this.trafficTower.requestCoordinates(this)
+    return null
+  }
+}
+
+// usage
+const tower = new TrafficTower()
+
+const airplanes = [new Airplane(10), new Airplane(20), new Airplane(30)]
+airplanes.forEach(airplane => {
+  tower.register(airplane)
+})
+
+console.log(airplanes.map(airplane => airplane.requestCoordinates()))
+// [[20, 30], [10, 30], [10, 20]]
+```
+
+## 观察者模式
+
+- 一（发布者）对多（订阅者）
+
+```js
+class Subject {
+  constructor() {
+    this._observers = []
+  }
+
+  subscribe(observer) {
+    this._observers.push(observer)
+  }
+
+  unsubscribe(observer) {
+    this._observers = this._observers.filter(obs => observer !== obs)
+  }
+
+  fire(change) {
+    this._observers.forEach(observer => {
+      observer.update(change)
+    })
+  }
+}
+
+class Observer {
+  constructor(state) {
+    this.state = state
+    this.initialState = state
+  }
+
+  update(change) {
+    let state = this.state
+    switch (change) {
+      case 'INC':
+        this.state = ++state
+        break
+      case 'DEC':
+        this.state = --state
+        break
+      default:
+        this.state = this.initialState
+    }
+  }
+}
+
+// usage
+const sub = new Subject()
+
+const obs1 = new Observer(1)
+const obs2 = new Observer(19)
+
+sub.subscribe(obs1)
+sub.subscribe(obs2)
+
+sub.fire('INC')
+
+console.log(obs1.state) // 2
+console.log(obs2.state) // 20
+```
