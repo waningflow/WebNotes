@@ -231,3 +231,200 @@ console.log(newCalc.add(10, 5)) // 15
 const adaptedCalc = new CalcAdapter()
 console.log(adaptedCalc.operations(10, 5, 'add')) // 15;
 ```
+
+## 装饰器模式
+
+```js
+class Book {
+  constructor(title, author, price) {
+    this._title = title
+    this._author = author
+    this.price = price
+  }
+
+  getDetails() {
+    return `${this._title} by ${this._author}`
+  }
+}
+
+// decorator 1
+function giftWrap(book) {
+  book.isGiftWrapped = true
+  book.unwrap = function() {
+    return `Unwrapped ${book.getDetails()}`
+  }
+
+  return book
+}
+
+// decorator 2
+function hardbindBook(book) {
+  book.isHardbound = true
+  book.price += 5
+  return book
+}
+
+// usage
+const alchemist = giftWrap(new Book('The Alchemist', 'Paulo Coelho', 10))
+
+console.log(alchemist.isGiftWrapped) // true
+console.log(alchemist.unwrap()) // 'Unwrapped The Alchemist by Paulo Coelho'
+
+const inferno = hardbindBook(new Book('Inferno', 'Dan Brown', 15))
+
+console.log(inferno.isHardbound) // true
+console.log(inferno.price) // 20
+```
+
+## 外观模式
+
+- 将复杂的逻辑隐藏在简单的 api 之下
+
+## 享元模式
+
+- 尽可能多的共享数据，减少应用程序中内存的使用
+
+```js
+// flyweight class
+class Icecream {
+  constructor(flavour, price) {
+    this.flavour = flavour
+    this.price = price
+  }
+}
+
+// factory for flyweight objects
+class IcecreamFactory {
+  constructor() {
+    this._icecreams = []
+  }
+
+  createIcecream(flavour, price) {
+    let icecream = this.getIcecream(flavour)
+    if (icecream) {
+      return icecream
+    } else {
+      const newIcecream = new Icecream(flavour, price)
+      this._icecreams.push(newIcecream)
+      return newIcecream
+    }
+  }
+
+  getIcecream(flavour) {
+    return this._icecreams.find(icecream => icecream.flavour === flavour)
+  }
+}
+
+// usage
+const factory = new IcecreamFactory()
+
+const chocoVanilla = factory.createIcecream('chocolate and vanilla', 15)
+const vanillaChoco = factory.createIcecream('chocolate and vanilla', 15)
+
+// reference to the same object
+console.log(chocoVanilla === vanillaChoco) // true
+```
+
+## 代理模式
+
+```js
+// Target
+function networkFetch(url) {
+  return `${url} - Response from network`
+}
+
+// Proxy
+// ES6 Proxy API = new Proxy(target, handler);
+const cache = []
+const proxiedNetworkFetch = new Proxy(networkFetch, {
+  apply(target, thisArg, args) {
+    const urlParam = args[0]
+    if (cache.includes(urlParam)) {
+      return `${urlParam} - Response from cache`
+    } else {
+      cache.push(urlParam)
+      return Reflect.apply(target, thisArg, args)
+    }
+  }
+})
+
+// usage
+console.log(proxiedNetworkFetch('dogPic.jpg')) // 'dogPic.jpg - Response from network'
+console.log(proxiedNetworkFetch('dogPic.jpg')) // 'dogPic.jpg - Response from cache'
+```
+
+## 责任链模式
+
+- 如事件冒泡和链式调用
+
+```js
+class CumulativeSum {
+  constructor(intialValue = 0) {
+    this.sum = intialValue
+  }
+
+  add(value) {
+    this.sum += value
+    return this
+  }
+}
+
+// usage
+const sum1 = new CumulativeSum()
+console.log(
+  sum1
+    .add(10)
+    .add(2)
+    .add(50).sum
+) // 62
+
+const sum2 = new CumulativeSum(10)
+console.log(
+  sum2
+    .add(10)
+    .add(20)
+    .add(5).sum
+) // 45
+```
+
+## 命令模式
+
+- 将方法的调用,请求或者操作封装到一个单独的对象中
+
+```js
+class SpecialMath {
+  constructor(num) {
+    this._num = num
+  }
+
+  square() {
+    return this._num ** 2
+  }
+
+  cube() {
+    return this._num ** 3
+  }
+
+  squareRoot() {
+    return Math.sqrt(this._num)
+  }
+}
+
+class Command {
+  constructor(subject) {
+    this._subject = subject
+    this.commandsExecuted = []
+  }
+  execute(command) {
+    this.commandsExecuted.push(command)
+    return this._subject[command]()
+  }
+}
+
+// usage
+const x = new Command(new SpecialMath(5))
+x.execute('square')
+x.execute('cube')
+
+console.log(x.commandsExecuted) // ['square', 'cube']
+```
