@@ -11,6 +11,28 @@
 
 ## 编写一个 loader
 
+简述
+
+> loader 是导出为一个函数的 node 模块。该函数在 loader 转换资源的时候调用。给定的函数将调用 loader API，并通过 this 上下文访问
+
+要点
+
+- 当链式调用多个 loader 的时候会以相反的顺序执行
+  - 最后的 loader 最早调用，将会传入原始资源内容
+  - 第一个 loader 最后调用，期望值是传出 JavaScript 和 source map（可选）
+  - 中间的 loader 执行时，会传入前一个 loader 传出的结果
+- 用法准则
+  - 简单易用
+  - 使用链式传递
+  - 模块化的输出
+  - 确保无状态
+  - 使用 loader utilities
+  - 记录 loader 的依赖
+  - 解析模块依赖关系
+  - 提取通用代码
+  - 避免绝对路径
+  - 使用 peer dependencies
+
 ## 插件
 
 简述
