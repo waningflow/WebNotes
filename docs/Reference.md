@@ -20,3 +20,4 @@
 - [状态管理库对比](https://zhuanlan.zhihu.com/p/53599723)
 - [JavaScript Design Patterns](https://medium.com/beginners-guide-to-mobile-web-development/javascript-design-patterns-25f0faaaa15)
 - [webpack docs](https://webpack.docschina.org/)
+- [yarn docs](https://yarnpkg.com/zh-Hans/docs/)
