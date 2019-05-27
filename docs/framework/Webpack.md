@@ -22,16 +22,16 @@
   - 第一个 loader 最后调用，期望值是传出 JavaScript 和 source map（可选）
   - 中间的 loader 执行时，会传入前一个 loader 传出的结果
 - 用法准则
-  - 简单易用
-  - 使用链式传递
+  - 简单易用。单一任务
+  - 使用链式传递。意味着不一定要输出 JavaScript。只要下一个 loader 可以处理这个输出，这个 loader 就可以返回任意类型的模块
   - 模块化的输出
-  - 确保无状态
-  - 使用 loader utilities
-  - 记录 loader 的依赖
+  - 确保无状态。在不同模块转换之间不保存状态。每次运行都应该独立于其他编译模块以及相同模块之前的编译结果
+  - 使用 loader utilities。获取传递给 loader 的选项。schema-utils 包配合 loader-utils，用于保证 loader 选项，进行与 JSON Schema 结构一致的校验
+  - 记录 loader 的依赖。使用外部资源（例如，从文件系统读取），必须声明它（使用 addDependency 方法）
   - 解析模块依赖关系
-  - 提取通用代码
-  - 避免绝对路径
-  - 使用 peer dependencies
+  - 提取通用代码。避免在 loader 处理的每个模块中生成通用代码。相反，你应该在 loader 中创建一个运行时文件，并生成 require 语句以引用该共享模块
+  - 避免绝对路径。不要在模块代码中插入绝对路径，因为当项目根路径变化时，文件绝对路径也会变化。loader-utils 中的 stringifyRequest 方法，可以将绝对路径转化为相对路径
+  - 使用 peer dependencies。如果你的 loader 简单包裹另外一个包，你应该把这个包作为一个 peerDependency 引入
 
 ## 插件
 
