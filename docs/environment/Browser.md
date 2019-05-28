@@ -104,6 +104,8 @@ mc.addEventListener('message', event => {
       - 避免频繁读取会引发回流/重绘的属性，如果确实需要多次使用，就用一个变量缓存起来。
       - 对具有复杂动画的元素使用绝对定位，使它脱离文档流，否则会引起父元素及后续元素频繁回流。
 
+## 缓存
+
 ## API
 
 - `document​.create​Document​Fragment()`, 创建一个新的空白的文档片段
