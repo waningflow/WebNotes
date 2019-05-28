@@ -306,3 +306,25 @@ class Example extends React.Component {
 // 2
 // 3
 ```
+
+## 使用迭代实现 flatter 函数
+
+```js
+let arr = [1, 2, [3, 4, 5, [6, 7], 8], 9, 10, [11, [12, 13]]]
+
+function flattern(list) {
+  const stack = [...list]
+  const des = []
+  while (stack.length) {
+    const next = stack.pop()
+    if (Array.isArray(next)) {
+      stack.push(...next)
+    } else {
+      des.push(next)
+    }
+  }
+  return des.reverse()
+}
+
+console.log(flattern(arr))
+```
