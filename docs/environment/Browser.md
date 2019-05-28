@@ -106,6 +106,42 @@ mc.addEventListener('message', event => {
 
 ## 缓存
 
+- 缓存位置
+  - Service Worker
+    - 传输协议必须为 HTTPS
+    - 自由控制缓存，如何匹配缓存，如何读取缓存，并且是持续性的
+  - Memory Cache
+    - 读取高效，缓存时间短
+    - 不关心返回资源的 HTTP 缓存头 Cache-Control 是什么值，同时资源的匹配也并非仅仅是对 URL 做匹配，还可能会对 Content-Type，CORS 等其他特征做校验
+  - Disk Cache
+    - 读取速度漫，容量和存储时效性好
+    - 根据 HTTP Herder 中的字段判断哪些资源需要缓存，哪些资源可以不请求直接使用，哪些资源已经过期需要重新请求
+  - Push Cache
+    - HTTP/2
+- 强缓存。不会向服务器发送请求，直接从缓存中读取资源，返回 200 的状态码，并且 Size 显示 from disk cache 或 from memory cache
+  - Expires（HTTP/1）
+    - 指定资源到期的时间
+    - 修改了本地时间，可能会造成缓存失效
+  - Cache-Control（HTTP/1.1）
+    - 多种指令组合
+    - 优先级高于 Expries
+- 协商缓存。强制缓存失效后，浏览器携带缓存标识向服务器发起请求，由服务器根据缓存标识决定是否使用缓存的过程
+  - Last-Modified/If-Modified-Since，文件最后修改时间
+    - 只能以秒计时
+  - ETag/If-None-Match，资源文件的一个唯一标识(由服务器生成)
+    - 精度优于 Last-Modified，性能逊于 Last-Modified，优先级高于 Last-Modified
+- 缓存机制
+  - 强缓存优先于协商缓存进行
+  - 协商缓存生效，返回 304，继续使用缓存
+  - 协商缓存失效，返回 200，重新返回资源和缓存标识
+- 实际场景
+  - 频繁变动的资源，`Cache-Control: no-cache`，使浏览器每次都请求服务器，然后配合 ETag 或者 Last-Modified 来验证资源是否有效
+  - 不常变化的资源，`Cache-Control: max-age=31536000`，使用强缓存一年，在文件名(或者路径)中添加 hash、版本号等动态字符来更更改引用 URL
+- 用户行为对浏览器缓存的影响
+  - 打开网页，地址栏输入地址： 查找 disk cache 中是否有匹配。如有则使用；如没有则发送网络请求
+  - 普通刷新：因为 TAB 并没有关闭，因此 memory cache 是可用的，会被优先使用(如果匹配的话)。其次才是 disk cache
+  - 强制刷新：浏览器不使用缓存，因此发送的请求头部均带有 Cache-control: no-cache(为了兼容，还带了 Pragma: no-cache),服务器直接返回 200 和最新内容
+
 ## API
 
 - `document​.create​Document​Fragment()`, 创建一个新的空白的文档片段
