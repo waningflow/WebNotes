@@ -379,9 +379,39 @@ var a = {
   - parcel
     - 使用多线程加快打包速度
     - 零配置
-- 配置文件
+- 配置
   - rollup 支持`import/export`语法，而 webpack 不支持
   - rollup 支持相对路径，而 webpack 不支持，要使用`path.resolve` 或 `path.join`
   - parcel 零配置
+- 入口文件
+  - webpack 仅支持 js 文件作为入口，对于其他格式（如 html）需要插件
+  - rollup 将 html 作为入口也需要插件支持（如 rollup-plugin-html-entry）
+  - parcel 可以将 html 作为入口，它会根据 script 标签自动检查
+- 转化（将其他类型的文件转为 js）
+  - webpack 使用 loader
+  - rollup 使用插件
+  - parcel 自动检测配置（`.babelrc`, `.postcssrc`, `.posthtmlrc`）并转化
+- Tree Shaking（dead code elimination）
+  - webpack
+    - 使用 ES6 语法（import/export）
+    - 在项目的`package.json`文件添加“sideEffects”入口
+    - 使用一个支持“死码删除”的压缩插件（如 UglifyJSPlugin）
+  - rollup 通过静态分析代码，排除没有使用的代码
+  - parcel 不支持
+- Dev Server
+  - webpack 通过`webpack-dev-server`插件
+  - rollup 通过`rollup-plugin-serve`和`rollup-plugin-livereload`
+  - parcel 自带
+- Hot Module Replacement(HMR，在运行时替换和增删模块而无需全体重新加载，加快开发速度)
+  - webpack 的`webpack-dev-server`支持 `hot` 模式
+  - rollup 不支持
+  - parcel 自带
+- 代码拆分
+  - webpack 三种方式
+    - 手动配置多个入口
+    - 通过`CommonsChunkPlugin`去重
+    - 动态导入，通过模块中的内联函数调用来分离代码
+  - rollup 仅简单依赖浏览器自带的 ES 模块加载
+  - parcel 通过`import()`语法
 
 ## redux 和 mobx 的区别
