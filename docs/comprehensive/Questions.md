@@ -360,6 +360,28 @@ var a = {
 
 ## vue 和 react 的区别
 
-## webpack 和 rollup 的区别
+## webpack, rollup 和 parcel 的区别
+
+> 一句话概括：开发应用时用 webpack，开发库时用 rollup
+
+- 打包工具
+  - 代码打包
+    - 模块化方式编写代码会产生很多文件，直接通过 script 标签依次引入会导致发出很多次请求，因此打包工具将所有的 js 文件整合进一个打包文件
+  - 代码压缩
+  - 热加载（HMR）
+  - 代码拆分
+- 设计初衷
+  - webpack
+    - 资源管理（可以包含任意类型的文件，甚至非 js 文件）
+    - 代码拆分
+  - rollup
+    - 基于标准模块化方案（ES6）编写代码，通过去除 dead code 获取尽可能小的 bundle
+  - parcel
+    - 使用多线程加快打包速度
+    - 零配置
+- 配置文件
+  - rollup 支持`import/export`语法，而 webpack 不支持
+  - rollup 支持相对路径，而 webpack 不支持，要使用`path.resolve` 或 `path.join`
+  - parcel 零配置
 
 ## redux 和 mobx 的区别
