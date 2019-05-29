@@ -23,3 +23,4 @@
 - [yarn docs](https://yarnpkg.com/zh-Hans/docs/)
 - [npx 使用教程](http://www.ruanyifeng.com/blog/2019/02/npx.html)
 - [深入理解浏览器的缓存机制](https://www.jianshu.com/p/54cc04190252)
+- [React 设计思想](https://github.com/react-guide/react-basic)

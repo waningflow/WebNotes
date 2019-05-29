@@ -357,3 +357,9 @@ var a = {
   [Symbol.toPrimitive]: (value => () => value++)(1)
 }
 ```
+
+## vue 和 react 的区别
+
+## webpack 和 rollup 的区别
+
+## redux 和 mobx 的区别
