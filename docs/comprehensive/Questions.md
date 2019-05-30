@@ -364,6 +364,9 @@ var a = {
 - 从数据状态到 UI 渲染的差别
   - react 函数式编程思想（如 HOC，immutability，纯函数），react 的哲学是认为状态是不可变的，当试图修改状态的时候并不会重新渲染，必须手动 setState 才能触发渲染，并且会直接渲染整个节点树，可以通过 PureComponent 和 shouldComponentUpdate 来控制渲染过程，所有的优化要手动完成，折让数据流更加可预测
   - vue 中数据的变化会直接映射到 UI 的改变，除了对一些特殊情况比如嵌套对象添加属性以及数组的修改需要使用特殊方式触发
+- 模板和样式
+  - react 使用 JSX 来表示模板,本质上是 React.createElement 的语法糖。样式上有很多解决方案，比如 JSS 和 Styled components
+  - vue 直接使用类 HTML 的 DSL 作为模板语言，样式直接写在 style 标签内，支持原生 css 以及 scss 等
 
 ## webpack, rollup 和 parcel 的区别
 
