@@ -360,6 +360,11 @@ var a = {
 
 ## vue 和 react 的区别
 
+- vue 是一个框架，而 react 是一个库（框架与库之间最本质区别在于控制权：you call libs, frameworks call you）
+- 从数据状态到 UI 渲染的差别
+  - react 函数式编程思想（如 HOC，immutability，纯函数），react 的哲学是认为状态是不可变的，当试图修改状态的时候并不会重新渲染，必须手动 setState 才能触发渲染，并且会直接渲染整个节点树，可以通过 PureComponent 和 shouldComponentUpdate 来控制渲染过程，所有的优化要手动完成，折让数据流更加可预测
+  - vue 中数据的变化会直接映射到 UI 的改变，除了对一些特殊情况比如嵌套对象添加属性以及数组的修改需要使用特殊方式触发
+
 ## webpack, rollup 和 parcel 的区别
 
 > 一句话概括：开发应用时用 webpack，开发库时用 rollup
