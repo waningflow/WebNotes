@@ -423,3 +423,40 @@ var a = {
   - parcel 通过`import()`语法
 
 ## redux 和 mobx 的区别
+
+## 如何实现前端工程化
+
+- 开发阶段（提交代码前）
+  - 模块化开发，采用 ES6 模块化方案
+  - 组件化开发，如 vue 的单文件组件
+  - 代码规范
+    - HTML，CSS，JavaScript 代码规范。通过 lint 工具规范代码，如使用统一的 ESlint，stylelint 配置
+    - 文件命名规范
+    - 项目文档规范
+    - 组件规范
+- precommit
+  - lint 测试
+  - 单元测试
+- 部署阶段（CI/CD，提交代码后）
+  - lint 测试，eslint
+  - 单元测试，Jest, Enzyme
+    - Jest
+      - 运行速度快，并行测试多文件
+      - 清晰操作简单
+      - 开箱即用，有断言、spies、mocks
+      - 默认创建全局环境，如“describe”已经在全局作用域，不用单独引入
+      - 快照测试
+      - 更强大的模块级 mocking 功能
+      - 代码覆盖检查
+      - Jest 仅仅更新被修改的文件，所以在监控模式 (watch mode) 下运行速度非常快
+  - 功能测试， Codeceptjs, WebDriverIO
+  - 视觉测试，Applitools
+  - 兼容性測試，Sauce Labs
+  - 部署
+  - 持续集成，Travis CI
+
+## 系统优化
+
+- 根据权限动态加载路由，避免生成不必要的路由配置
+- 根据路由按需加载组件，结合 webpack 的代码拆分，提高响应速度
+- 所有请求通过“api”模块同一处理，各个功能模块有对应的 api 配置文件方便管理，全局统一添加超时以及错误提醒
