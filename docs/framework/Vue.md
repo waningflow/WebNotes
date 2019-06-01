@@ -130,9 +130,13 @@ data.name = 'yyy1'
 
 ## 原理
 
-- 初始化 Vue 到最终渲染
-  - new Vue -> init -> \$mount [-> complie] -> render -> vnode -> patch -> DOM
-- 异步组件实现的本质是 2 次渲染，除了 0 delay 的高级异步组件第一次直接渲染成 loading 组件外，其它都是第一次渲染生成一个注释节点，当异步获取组件成功后，再通过 forceRender 强制重新渲染，这样就能正确渲染出我们异步加载的组件了
+- 核心
+  - 数据驱动
+    - 初始化 Vue 到最终渲染
+      - new Vue -> init -> \$mount [-> complie] -> render -> vnode -> patch -> DOM
+  - 组件化
+    - 异步组件实现的本质是 2 次渲染，除了 0 delay 的高级异步组件第一次直接渲染成 loading 组件外，其它都是第一次渲染生成一个注释节点，当异步获取组件成功后，再通过 forceRender 强制重新渲染，这样就能正确渲染出我们异步加载的组件了
+  - 响应式原理
 - 编译
   - parse，模板解析成 AST
   - optimize，标记静态节点
