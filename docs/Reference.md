@@ -25,3 +25,4 @@
 - [深入理解浏览器的缓存机制](https://www.jianshu.com/p/54cc04190252)
 - [React 设计思想](https://github.com/react-guide/react-basic)
 - [Comparing bundlers: Webpack, Rollup & Parcel](https://medium.com/js-imaginea/comparing-bundlers-webpack-rollup-parcel-f8f5dc609cfd)
+- [Webpack 原理-编写 Plugin](https://juejin.im/post/5a5c18f2518825734f52ad65)

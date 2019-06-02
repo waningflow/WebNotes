@@ -453,7 +453,7 @@ var a = {
   - 视觉测试，Applitools
   - 兼容性測試，Sauce Labs
   - 部署
-  - 持续集成，Travis CI
+  - 持续集成，Travis CI，Jenkins
 
 ## 系统优化
 
@@ -468,6 +468,18 @@ var a = {
   - 经常访问的查询接口开启 redis 缓存 -> 提高响应速度
   - 配置 https -> 提高请求安全性
   - 登录要求二次验证 -> 提高账户安全性
+  - webpack 优化
+    - webpack4
+      - optimization.splitChunks 代替原有的 CommonsChunkPlugin，生产模式默认开启
+        - 新的 chunk 能被复用，或者模块是来自 node_modules 目录
+        - 新的 chunk 大于 30Kb(min+gz 压缩前）
+        - 按需加载 chunk 的并发请求数量小于等于 5 个
+        - 页面初始加载时的并发请求数量小于等于 3 个
+      - 零配置（更好的默认配置）
+    - 分包策略（根据共用范围，更新频率）
+      - 基础类库 chunk-libs
+      - UI 组件库
+      - 自定义组件/函数
 - 一些问题
   - api 请求频度受限 -> 控制并发数量（Bluebird 或手写并发控制函数）
   - 数据量特别大时表格很卡 -> 基于懒加载技术开发表格组件
