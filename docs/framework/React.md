@@ -108,6 +108,14 @@ const App = () => (
 )
 ```
 
+## Fiber
+
+- React 框架内部的运作
+  - Virtual DOM 层，描述页面长什么样。
+  - Reconciler 层，负责调用组件生命周期方法，进行 Diff 运算等。
+  - Renderer 层，根据不同的平台，渲染出相应的页面，比较常见的是 ReactDOM 和 ReactNative。
+- Fiber Reconciler，每执行一段时间，都会将控制权交回给浏览器，可以分段执行
+
 ## Hook
 
 ## React 设计思想
