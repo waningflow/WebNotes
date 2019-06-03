@@ -25,4 +25,6 @@
 
 ## electron
 
+> 将 Chromium 和 Node.js 合并到同一个运行时环境中，并将其打包为 Mac，Windows 和 Linux 系统下的应用
+
 ## react native
