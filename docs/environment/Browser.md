@@ -151,8 +151,16 @@ mc.addEventListener('message', event => {
   - Shadow DOM（影子 DOM）：一组 JavaScript API，用于将封装的“影子”DOM 树附加到元素（与主文档 DOM 分开呈现）并控制其关联的功能。通过这种方式，您可以保持元素的功能私有，这样它们就可以被脚本化和样式化，而不用担心与文档的其他部分发生冲突。
   - HTML templates（HTML 模板）：<template> 和 <slot> 元素使您可以编写不在呈现页面中显示的标记模板。然后它们可以作为自定义元素结构的基础被多次重用。
   - HTML Imports（HTML 导入）：一旦定义了自定义组件，最简单的重用它的方法就是使其定义细节保存在一个单独的文件中，然后使用导入机制将其导入到想要实际使用它的页面中。HTML 导入就是这样一种机制，尽管存在争议 — Mozilla 根本不同意这种方法，并打算在将来实现更合适的
-- 
+
+## SharedArrayBuffer
 
 ## API
 
 - `document​.create​Document​Fragment()`, 创建一个新的空白的文档片段
+
+## 零碎
+
+- script 标签的 defer 和 async 属性
+  - 不加属性 -> 加载并执行 js 后再继续 dom 树构建
+  - 加 async -> 异步加载 js，但加载后会立即执行并阻塞 dom 树构建
+  - 加 defer -> 异步加载 js，等 dom 树构建完毕再执行 js
