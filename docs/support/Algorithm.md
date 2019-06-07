@@ -53,9 +53,55 @@ function sort(arr) {
 }
 ```
 
+## 归并排序
+
+- 分成两半，分别排序，然后合并，以此递归
+
+```js
+function sort(arr) {
+  function merge(nums1, m, nums2, n) {
+    let i = m - 1
+    let j = n - 1
+    while (i >= 0 || j >= 0) {
+      if (j < 0 || nums1[i] > nums2[j]) {
+        nums1[i + j + 1] = nums1[i]
+        i--
+      } else {
+        nums1[i + j + 1] = nums2[j]
+        j--
+      }
+    }
+  }
+
+  function mergeSort(arr, left, right) {
+    if (left === right) {
+      return
+    }
+    let mid = left + parseInt((right - left) >> 1)
+    mergeSort(arr, left, mid)
+    mergeSort(arr, mid + 1, right)
+
+    let a1 = []
+    let a2 = []
+    for (let i = 0; i <= mid - left; i++) {
+      a1[i] = arr[left + i]
+    }
+    for (let i = 0; i < right - mid; i++) {
+      a2[i] = arr[mid + 1 + i]
+    }
+    merge(a1, mid - left + 1, a2, right - mid)
+    for (let i = 0; i <= right - left; i++) {
+      arr[left + i] = a1[i]
+    }
+  }
+  mergeSort(arr, 0, arr.length - 1)
+  return arr
+}
+```
+
 ## 快速排序
 
-随机选一个数，比该数小的放左边，大的放右边，两侧递归。复杂度 O(LogN)
+- 随机选一个数，比该数小的放左边，大的放右边，两侧递归。复杂度 O(LogN)
 
 ```js
 function sort(arr) {
