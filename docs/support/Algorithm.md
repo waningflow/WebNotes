@@ -55,7 +55,7 @@ function sort(arr) {
 
 ## 归并排序
 
-- 分成两半，分别排序，然后合并，以此递归
+- 分成两半，分别排序，然后合并，以此递归。复杂度 O(NlogN)
 
 ```js
 function sort(arr) {
