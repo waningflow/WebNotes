@@ -424,6 +424,22 @@ var a = {
 
 ## redux 和 mobx 的区别
 
+## Virtual DOM 真的比操作原生 DOM 快吗
+
+- 原生 DOM 操作 vs 通过框架封装操作
+  - 性能 vs 可维护性的取舍
+  - 框架给你的保证是，你在不需要手动优化的情况下，依然可以给你提供过得去的性能
+- innerHTML vs Virtual DOM 的重绘性能消耗
+  - innerHTML: render html string O(template size) + 重新创建所有 DOM 元素 O(DOM size)
+  - Virtual DOM: render Virtual DOM + diff O(template size) + 必要的 DOM 更新 O(DOM change)
+- 为什么要有 Virtual DOM：它保证了
+  - 不管你的数据变化多少，每次重绘的性能都可以接受
+  - 你依然可以用类似 innerHTML 的思路去写你的应用
+- 不同场合性能比较
+  - 初始渲染：Virtual DOM > 脏检查 >= 依赖收集
+  - 小量数据更新：依赖收集 >> Virtual DOM + 优化 > 脏检查（无法优化） > Virtual DOM 无优化
+  - 大量数据更新：脏检查 + 优化 >= 依赖收集 + 优化 > Virtual DOM（无法/无需优化）>> MVVM 无优化
+
 ## 如何实现前端工程化
 
 - 开发阶段（提交代码前）
