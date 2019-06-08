@@ -424,7 +424,7 @@ var a = {
 
 ## redux 和 mobx 的区别
 
-## Virtual DOM 真的比操作原生 DOM 快吗
+## Virtual DOM 与原生 DOM
 
 - 原生 DOM 操作 vs 通过框架封装操作
   - 性能 vs 可维护性的取舍

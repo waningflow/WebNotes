@@ -26,3 +26,4 @@
 - [React 设计思想](https://github.com/react-guide/react-basic)
 - [Comparing bundlers: Webpack, Rollup & Parcel](https://medium.com/js-imaginea/comparing-bundlers-webpack-rollup-parcel-f8f5dc609cfd)
 - [Webpack 原理-编写 Plugin](https://juejin.im/post/5a5c18f2518825734f52ad65)
+- [Virtual DOM 背后的秘密（Diff 篇）](https://zhuanlan.zhihu.com/p/36500459)
