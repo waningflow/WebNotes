@@ -49,5 +49,14 @@ module.exports = {
       }
     ],
     sidebar: ['/', ...sidebarModules, '/Reference.md']
-  }
+  },
+  plugins: [
+    '@vuepress/back-to-top',
+    [
+      '@vuepress/google-analytics',
+      {
+        ga: 'UA-136598251-6'
+      }
+    ]
+  ]
 }
