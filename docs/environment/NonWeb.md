@@ -1,4 +1,4 @@
-# "非" web
+# web ++
 
 ## Hybrid
 
@@ -28,3 +28,15 @@
 > 将 Chromium 和 Node.js 合并到同一个运行时环境中，并将其打包为 Mac，Windows 和 Linux 系统下的应用
 
 ## react native
+
+## PWA
+
+> 网站转换成应用
+
+- 组件
+  - manifest 文件
+  - service worker
+  - 安装
+  - https
+  - 创建 apk
+  - Lighthouse
