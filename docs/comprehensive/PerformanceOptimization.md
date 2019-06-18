@@ -78,3 +78,59 @@
     - 被动监测工具，可以根据请求来模拟用户交互（综合测试，如 Lighthouse，WebPageTest）
     - 主动监测工具， 是那些不断记录和评价用户交互行为的（真正的用户监控，如 SpeedCurve，New Relic —— 这两种工具也提供综合测试）
   - 与你的同事分享性能清单
+- 制定现实的目标
+  - 控制响应时间在 100ms 内，控制帧速在 60 帧/秒
+  - SpeedIndex < 1250, TTI < 5s on 3G, Critical file size budget < 170Kb
+- 定义环境
+  - 做好构建工具的选型以及搭建好（适合自己的）构建工具
+  - 渐进式增强
+  - 选择一个强大的性能基准
+    - PRPL 模式，保持推送关键资源，渲染初始路由，预缓存剩余路由和延迟加载必要的剩余路由
+  - 你的项目需要使用 AMP 和 Instant Articles 么？
+  - 合理使用 CDN
+- 构建优化
+  - 分清轻重缓急
+  - 考虑使用“cutting-the-mustard”模式
+  - 减少解析 JavaScript 的成本
+  - 你使用 ahead-of-time 编译器么？
+  - 你使用 tree-shaking、scope hoisting、code-splitting 么
+  - 利用你使用的 JavaScript 引擎对其进行优化
+  - 客户端渲染还是服务端渲染？
+  - 你是否限制第三方脚本的影响？
+  - HTTP cache 头部设置是否合理？
+- 静态资源优化
+  - 你是否使用 Brotli 或 Zopfli 进行纯文本压缩？
+  - 图像是否进行了适当的优化？
+  - 是否对 Web 字体进行了优化？
+- 交付优化
+  - 你是否异步加载 JavaScript？
+  - 你对开销很大的 JS 是否使用懒加载并使用 Intersection Observer？
+  - 你是否优先加载关键的 CSS？
+  - 你使用流响应吗?
+  - 你使用 Save-Data 存储数据吗?
+  - 你是否激活了连接以加快传输
+  - 你优化渲染性能了吗？
+  - 你优化过渲染体验吗？
+- HTTP/2
+  - 迁移到 HTTPS，然后打开 HTTP/2.
+  - 正确地部署 HTTP/2.
+  - 你的服务和 CDNs 支持 HTTP/2 吗？
+  - 是否启动了 OCSP stapling？
+  - 你是否已采用了 IPv6？
+  - 你使用（针对 HTTP 响应头压缩的）HPACK 压缩算法了吗？
+  - 务必保证服务器的安全性
+  - 是否使用了 service workers 来缓存以及用作网络回退？
+- 测试和监控
+  - 你是了解否在代理浏览器和旧版浏览器中测试过？
+  - 是否启用了持续监控？
+- 速效方案
+  - 测量实际环境的体验并设定适当的目标。一个好的目标是：第一次有意义的绘制 < 1 s，速度指数 < 1250，在慢速的 3G 网络上的交互 < 5s，对于重复访问，TTI < 2s。优化渲染开始时间和交互时间。
+  - 为您的主模板准备关键的 CSS，并将其包含在页面的 `<head>` 中。（你的预算是 14 KB）。对于 CSS/JS，文件大小不超过 170 KB gzipped（解压后 0.8-1 MB）。
+  - 延迟加载尽可能多的脚本，包括您自己的和第三方的脚本——特别是社交媒体按钮、视频播放器和耗时的 JavaScript 脚本。
+  - 添加资源提示，使用 dns-lookup、preconnect、prefetch 和 preload 加速传输。
+  - 分离 web 字体，并以异步方式加载它们（或切换到系统字体）。
+  - 优化图像，并在重要页面（例如登录页面）中考虑使用 WebP。
+  - 检查 HTTP 缓存头和安全头是否设置正确。
+  - 在服务器上启用 Brotli 或 Zopfli 压缩。（如果做不到，不要忘记启用 Gzip 压缩。）
+  - 如果 HTTP/2 可用，启用 HPACK 压缩并开启混合内容警告监控。如果您正在运行 LTS，也可以启用 OCSP stapling。
+  - 在 service worker 缓存中尽可能多的缓存资产，如字体、样式、JavaScript 和图像。
