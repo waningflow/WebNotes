@@ -134,3 +134,11 @@
   - 在服务器上启用 Brotli 或 Zopfli 压缩。（如果做不到，不要忘记启用 Gzip 压缩。）
   - 如果 HTTP/2 可用，启用 HPACK 压缩并开启混合内容警告监控。如果您正在运行 LTS，也可以启用 OCSP stapling。
   - 在 service worker 缓存中尽可能多的缓存资产，如字体、样式、JavaScript 和图像。
+
+## JavaScript 启动优化
+
+## 监控方式
+
+- lighthouse
+- webpackBundleAnalyzer
+- CSS 和 JS 代码覆盖率
