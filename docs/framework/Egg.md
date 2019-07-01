@@ -1,1 +1,1 @@
-# Egg.js
+# Egg
