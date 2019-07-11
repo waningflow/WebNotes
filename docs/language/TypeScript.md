@@ -23,4 +23,7 @@
 
 ## Interfaces
 
+- 可选属性
+- 只读属性
+
 ## Generics
