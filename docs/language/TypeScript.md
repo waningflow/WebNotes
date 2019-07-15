@@ -33,4 +33,12 @@
 - 混合类型
 - 接口继承类
 
-## Generics
+## 函数
+
+```js
+let myAdd: (baseValue: number, increment: number) => number = function(x: number, y: number): number {
+  return x + y
+}
+```
+
+## 泛型
