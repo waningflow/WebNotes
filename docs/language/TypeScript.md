@@ -35,10 +35,32 @@
 
 ## 函数
 
+- 完整函数类型
+
 ```js
 let myAdd: (baseValue: number, increment: number) => number = function(x: number, y: number): number {
   return x + y
 }
 ```
+
+- 推断类型
+
+```js
+// myAdd has the full function type
+let myAdd = function(x: number, y: number): number {
+  return x + y
+}
+
+// The parameters `x` and `y` have the type number
+let myAdd: (baseValue: number, increment: number) => number = function(x, y) {
+  return x + y
+}
+```
+
+- 可选参数和默认参数
+  - 可选参数必须跟在必须参数后面
+  - 在所有必须参数后面的带默认初始化的参数都是可选的
+  - 带默认值的参数不需要放在必须参数的后面，如果带默认值的参数出现在必须参数前面，用户必须明确的传入 undefined 值来获得默认值
+- 重载
 
 ## 泛型
