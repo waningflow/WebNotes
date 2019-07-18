@@ -93,3 +93,13 @@ let myAdd: (baseValue: number, increment: number) => number = function(x, y) {
 - 泛型类型
 - 泛型类
 - 泛型约束
+
+## 枚举
+
+- 数字枚举
+- 字符串枚举
+- 异构枚举
+- 计算的和常量成员
+- 联合枚举与枚举成员的类型
+- 运行时的枚举
+- 外部枚举
