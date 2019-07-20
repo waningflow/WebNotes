@@ -118,3 +118,15 @@ let myAdd: (baseValue: number, increment: number) => number = function(x, y) {
 - 多态的 this 类型
 - 索引类型
 - 映射类型
+
+## 装饰器
+
+- 装饰器工厂
+- 装饰器组合
+- 装饰器求值
+- 类装饰器
+- 方法装饰器
+- 访问器装饰器
+- 属性装饰器
+- 参数装饰器
+- 元数据
