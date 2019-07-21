@@ -27,7 +27,21 @@
 - 只读属性
 - 额外属性检查
 - 函数类型
+
+```js
+interface SearchFunc {
+  (source: string, subString: string): boolean;
+}
+```
+
 - 可索引的类型
+
+```js
+interface StringArray {
+  [index: number]: string;
+}
+```
+
 - 类类型
 - 继承接口
 - 混合类型
