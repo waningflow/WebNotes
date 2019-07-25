@@ -142,3 +142,8 @@
 - lighthouse
 - webpackBundleAnalyzer
 - CSS 和 JS 代码覆盖率
+
+## 性能分析
+
+- [Chrome Developer Tools](https://developers.google.com/web/tools/chrome-devtools)
+  - Performance
