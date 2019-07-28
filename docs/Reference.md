@@ -29,3 +29,4 @@
 - [Virtual DOM 背后的秘密（Diff 篇）](https://zhuanlan.zhihu.com/p/36500459)
 - [Why you should choose useState instead of useReducer](https://medium.com/free-code-camp/why-you-should-choose-usestate-instead-of-usereducer-ffc80057f815)
 - [2018 前端性能优化清单](https://juejin.im/post/5a966bd16fb9a0635172a50a#heading-0)
+- [Using the Chrome DevTools Audit Feature to Measure and Optimize Performance (Part 1)](https://medium.com/chingu/using-the-chrome-devtools-audit-feature-to-measure-and-optimize-performance-part-1-868a20bbfde8)
