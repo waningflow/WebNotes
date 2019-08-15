@@ -29,6 +29,12 @@ class OrderLine {
 
 ## 响应observable
 
+- computed
+- autorun
+- when
+- reaction
+- observer
+
 ## 改变observable
 
 ## 实用工具函数
