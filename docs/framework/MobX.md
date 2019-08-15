@@ -37,6 +37,10 @@ class OrderLine {
 
 ## 改变observable
 
+- action
+- async action & flows
+- Object api
+
 ## 实用工具函数
 
 ## 常用技巧
