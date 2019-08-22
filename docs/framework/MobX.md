@@ -43,4 +43,17 @@ class OrderLine {
 
 ## 实用工具函数
 
+- toJS
+- extendObservable
+- createAtom
+- intercept & observe
+- mobxUtils
+    - fromPromise
+    - fromResource
+    - toStream
+    - fromStream
+    - now
+    - createTransformer
+    - expr
+
 ## 常用技巧
