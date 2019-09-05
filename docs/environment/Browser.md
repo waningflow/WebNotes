@@ -152,6 +152,16 @@ mc.addEventListener('message', event => {
   - HTML templates（HTML 模板）：`<template>` 和 `<slot>` 元素使您可以编写不在呈现页面中显示的标记模板。然后它们可以作为自定义元素结构的基础被多次重用。
   - HTML Imports（HTML 导入）：一旦定义了自定义组件，最简单的重用它的方法就是使其定义细节保存在一个单独的文件中，然后使用导入机制将其导入到想要实际使用它的页面中。HTML 导入就是这样一种机制，尽管存在争议 — Mozilla 根本不同意这种方法，并打算在将来实现更合适的
 
+## ArrayBuffer, binary arrays
+
+> 二进制数据操作相关概念
+
+- ArrayBuffer
+- Unit8Array
+- DataView
+- Blob
+- File
+
 ## SharedArrayBuffer
 
 ## API
