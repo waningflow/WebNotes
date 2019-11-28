@@ -10,3 +10,8 @@
 - [机器学习](http://product.dangdang.com/23898620.html)
 - [为什么](http://product.dangdang.com/27890880.html)
 - [精益创业](http://product.dangdang.com/22840941.html)
+
+## 2019.12
+
+- [算法导论](http://product.dangdang.com/22927209.html)
+- [必然](http://product.dangdang.com/25306327.html)
