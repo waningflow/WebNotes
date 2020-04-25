@@ -15,3 +15,10 @@
 
 - [算法导论](http://product.dangdang.com/22927209.html)
 - [必然](http://product.dangdang.com/25306327.html)
+
+## 2020.04
+
+- [摄影的艺术](http://product.dangdang.com/22608354.html)
+- [编程珠玑（续）](http://product.dangdang.com/23771156.html)
+- [编程之美](http://product.dangdang.com/25478415.html)
+- [重构（第二版）](http://product.dangdang.com/27851757.html)
