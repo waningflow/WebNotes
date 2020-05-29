@@ -34,7 +34,7 @@ postMessage 使用
 window.parent.postMessage('message', 'http://test.com')
 // 接收消息端
 var mc = new MessageChannel()
-mc.addEventListener('message', event => {
+mc.addEventListener('message', (event) => {
   var origin = event.origin || event.originalEvent.origin
   if (origin === 'http://test.com') {
     console.log('验证通过')
@@ -163,6 +163,8 @@ mc.addEventListener('message', event => {
 - File
 
 ## SharedArrayBuffer
+
+## performance
 
 ## API
 

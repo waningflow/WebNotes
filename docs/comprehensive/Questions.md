@@ -22,7 +22,7 @@ function debunce(fun, t = 10) {
     if (st) {
       clearTimeout(st)
     }
-    st = setTimeout(_ => {
+    st = setTimeout((_) => {
       fun.apply(this, args)
     }, t)
   }
@@ -56,12 +56,12 @@ let tree = [
         name: 'p11',
         children: [
           {
-            name: 'p111'
+            name: 'p111',
           },
           {
-            name: 'p112'
-          }
-        ]
+            name: 'p112',
+          },
+        ],
       },
       {
         name: 'p12',
@@ -70,22 +70,22 @@ let tree = [
             name: 'p121',
             children: [
               {
-                name: 'p1211'
-              }
-            ]
+                name: 'p1211',
+              },
+            ],
           },
           {
-            name: 'p122'
-          }
-        ]
-      }
-    ]
-  }
+            name: 'p122',
+          },
+        ],
+      },
+    ],
+  },
 ]
 
 let res1 = []
 function deepSearch(list) {
-  list.forEach(v => {
+  list.forEach((v) => {
     res1.push(v.name)
     if (v.children && v.children.length) {
       deepSearch(v.children)
@@ -103,7 +103,7 @@ function breadSearch(list) {
     let nd = node.shift()
     res.push(nd.name)
     if (nd.children && nd.children.length) {
-      nd.children.forEach(v => {
+      nd.children.forEach((v) => {
         node.push(v)
       })
     }
@@ -125,10 +125,10 @@ function deepcopy(obj) {
   let item
   if (typeof obj === 'object') {
     if (Array.isArray(obj)) {
-      item = obj.map(v => deepcopy(v))
+      item = obj.map((v) => deepcopy(v))
     } else {
       item = {}
-      Object.keys(obj).forEach(k => {
+      Object.keys(obj).forEach((k) => {
         item[k] = deepcopy(obj[k])
       })
     }
@@ -141,14 +141,14 @@ function deepcopy(obj) {
 // DFS或BFS实现，考虑循环引用，不考虑正则，Symbol等
 function copy(obj) {
   let rtn = {
-    k: undefined
+    k: undefined,
   }
   let stack = [
     {
       des: rtn,
       key: 'k',
-      src: obj
-    }
+      src: obj,
+    },
   ]
   let hash = new Map()
   while (stack.length) {
@@ -170,16 +170,16 @@ function copy(obj) {
         stack.push({
           des: des[key],
           key: i,
-          src: v
+          src: v,
         })
       })
     } else {
       des[key] = {}
-      Object.keys(src).forEach(k => {
+      Object.keys(src).forEach((k) => {
         stack.push({
           des: des[key],
           key: k,
-          src: src[k]
+          src: src[k],
         })
       })
     }
@@ -240,10 +240,7 @@ console.log('script end')
 var arr = [[1, 2, 2], [3, 4, 5, 5], [6, 7, 8, 9, [11, 12, [12, 13, [14]]]], 10]
 
 function flatArr(arr) {
-  return arr.reduce(
-    (pre, cur) => pre.concat(Array.isArray(cur) ? flatArr(cur) : cur),
-    []
-  )
+  return arr.reduce((pre, cur) => pre.concat(Array.isArray(cur) ? flatArr(cur) : cur), [])
 }
 
 let res = [...new Set(flatArr(arr))].sort((a, b) => a - b)
@@ -277,7 +274,7 @@ class Example extends React.Component {
   constructor() {
     super()
     this.state = {
-      val: 0
+      val: 0,
     }
   }
 
@@ -343,18 +340,18 @@ var a = {
   value: 1,
   valueOf() {
     return this.value++
-  }
+  },
 }
 // or
 var a = {
   value: 1,
   toString() {
     return this.value++
-  }
+  },
 }
 // or
 var a = {
-  [Symbol.toPrimitive]: (value => () => value++)(1)
+  [Symbol.toPrimitive]: ((value) => () => value++)(1),
 }
 ```
 
@@ -362,11 +359,12 @@ var a = {
 
 - vue 是一个框架，而 react 是一个库（框架与库之间最本质区别在于控制权：you call libs, frameworks call you）
 - 从数据状态到 UI 渲染的差别
-  - react 函数式编程思想（如 HOC，immutability，纯函数），react 的哲学是认为状态是不可变的，当试图修改状态的时候并不会重新渲染，必须手动 setState 才能触发渲染，并且会直接渲染整个节点树，可以通过 PureComponent 和 shouldComponentUpdate 来控制渲染过程，所有的优化要手动完成，折让数据流更加可预测
+  - react 函数式编程思想（如 HOC，immutability，纯函数），react 的哲学是认为状态是不可变的，当试图修改状态的时候并不会重新渲染，必须手动 setState 才能触发渲染，并且会直接渲染整个节点树，可以通过 PureComponent 和 shouldComponentUpdate 来控制渲染过程，所有的优化要手动完成，这让数据流更加可预测
   - vue 中数据的变化会直接映射到 UI 的改变，除了对一些特殊情况比如嵌套对象添加属性以及数组的修改需要使用特殊方式触发
 - 模板和样式
   - react 使用 JSX 来表示模板,本质上是 React.createElement 的语法糖。样式上有很多解决方案，比如 JSS 和 Styled components
   - vue 直接使用类 HTML 的 DSL 作为模板语言，样式直接写在 style 标签内，支持原生 css 以及 scss 等
+- （vue 是全自动咖啡机，react 是半自动咖啡机~)
 
 ## webpack, rollup 和 parcel 的区别
 
@@ -504,6 +502,11 @@ var a = {
   - 繁重数据处理放进 webworker -> 避免渲染卡顿
   - 前端资源部署到 cdn -> 加快访问速度
   - 使用 Http2 -> 加快访问速度
+
+## vue3 的 Composition API 与 React Hooks
+
+- React Hooks 在每次组件渲染时都会调用，通过隐式地将状态挂载在当前的内部组件节点上，在下一次渲染时根据调用顺序取出
+- Vue 的 setup() 每个组件实例只会在初始化时调用一次 ，状态通过引用储存在 setup() 的闭包内
 
 ## 问题
 
